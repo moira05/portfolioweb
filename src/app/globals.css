@@ -8,8 +8,35 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-manrope: var(--font-manrope);
+  --font-urbanist: var(--font-urbanist);
+  --font-vollkorn: var(--font-vollkorn);
+  --font-space-mono: var(--font-space-mono);
+}
+
+@keyframes wave {
+  0%   { transform: rotate(0deg); }
+  15%  { transform: rotate(20deg); }
+  30%  { transform: rotate(-8deg); }
+  45%  { transform: rotate(18deg); }
+  60%  { transform: rotate(-4deg); }
+  75%  { transform: rotate(14deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.animate-wave {
+  display: inline-block;
+  transform-origin: 70% 70%;
+  animation: wave 1.4s ease-in-out 0.3s 1 both;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 35s linear infinite;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -17,6 +44,10 @@
     --background: #0a0a0a;
     --foreground: #ededed;
   }
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
