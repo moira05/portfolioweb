@@ -68,7 +68,7 @@ export default function Hero() {
             <p className="font-manrope text-[1rem] font-normal leading-snug text-black md:text-[1.4rem] md:max-w-[560px]">
               En cada interacción, en cada detalle, hay una razón.{" "}
               <strong className="font-bold">
-                Para que sea más fácil de usar, más claro de entender, y para que mueva los números que importan.
+                Para que sea más fácil de usar, más claro de entender, y para que mueva los números que importan, sin perder de vista a las personas.
               </strong>
             </p>
           </div>

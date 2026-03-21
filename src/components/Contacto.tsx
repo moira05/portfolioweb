@@ -45,7 +45,7 @@ export default function Contacto() {
           ¿Querés explorar algo?
         </h2>
         <p className="font-manrope text-[1rem] font-normal leading-relaxed text-[#2d2d2d] max-w-[680px] mb-10 md:text-[1.25rem]">
-          Me interesan los proyectos donde haya un problema real para resolver, especialmente donde la IA pueda ser parte de la solución. Si tenés una idea, un experimento o algo para probar — escribime.
+          Me interesan los proyectos donde haya un problema real para resolver, especialmente aquellos con impacto social, donde la IA pueda ser parte de la solución. Si tenés una idea, un experimento o algo para probar, hablemos.
         </p>
 
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-10">
