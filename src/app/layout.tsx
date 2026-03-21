@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Manrope, Urbanist, Vollkorn, Space_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import ClarityInit from "@/components/ClarityInit";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -41,6 +42,7 @@ export default function RootLayout({
       <body
         className={`${manrope.variable} ${urbanist.variable} ${vollkorn.variable} ${spaceMono.variable} antialiased`}
       >
+        <ClarityInit />
         <Navbar />
         {children}
       </body>
