@@ -168,10 +168,7 @@ export default function Proyectos() {
                 fill
                 className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
               />
-              {/* Coming soon badge */}
-              <span className="absolute left-4 top-4 rounded-full bg-[#b0aaf2] px-3 py-1 font-manrope text-[0.75rem] font-semibold text-black">
-                Coming soon
-              </span>
+
               {/* Dark hover overlay */}
               <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                 <Link
