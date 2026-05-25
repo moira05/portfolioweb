@@ -173,6 +173,8 @@ export default function Proyectos() {
               <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                 <Link
                   href="https://www.afdesarrollos.com.ar/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex items-center gap-2 rounded-full bg-white px-5 py-2.5 font-manrope text-[0.9rem] font-semibold text-black transition-transform duration-200 hover:scale-105"
                 >
                   Ver proyecto
