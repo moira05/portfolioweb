@@ -1,12 +1,12 @@
 import Image from "next/image";
 
 const tools = [
-  { src: "https://www.figma.com/api/mcp/asset/fa91ee54-d96e-4497-af8c-e02ce18396d5", alt: "Figma" },
-  { src: "https://www.figma.com/api/mcp/asset/ae468d0f-213b-4315-a44b-d50b5a6994a4", alt: "v0" },
-  { src: "https://www.figma.com/api/mcp/asset/9befd16c-9c42-4795-96cf-eed3262d9311", alt: "Claude" },
-  { src: "https://www.figma.com/api/mcp/asset/cd70b750-09d6-492b-9c57-55ffbee224f9", alt: "ChatGPT" },
-  { src: "https://www.figma.com/api/mcp/asset/6b833ffa-2417-421b-b726-f392f886b923", alt: "Mobbin" },
-  { src: "https://www.figma.com/api/mcp/asset/c5e39227-ecd1-4283-95e0-a9846a941896", alt: "Notion" },
+  { src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg", alt: "Figma" },
+  { src: "https://registry.npmmirror.com/@lobehub/icons-static-png/latest/files/dark/v0.png", alt: "v0" },
+  { src: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Claude_AI_logo.svg/1024px-Claude_AI_logo.svg.png", alt: "Claude" },
+  { src: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/1024px-ChatGPT_logo.svg.png", alt: "ChatGPT" },
+  { src: "https://mobbin.com/favicon.ico", alt: "Mobbin" },
+  { src: "https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png", alt: "Notion" },
 ];
 
 function WavyUnderline() {
