@@ -1,12 +1,12 @@
 import Image from "next/image";
 
 const tools = [
-  { src: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg", alt: "Figma" },
-  { src: "https://registry.npmmirror.com/@lobehub/icons-static-png/latest/files/dark/v0.png", alt: "v0" },
-  { src: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Claude_AI_logo.svg/1024px-Claude_AI_logo.svg.png", alt: "Claude" },
-  { src: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/1024px-ChatGPT_logo.svg.png", alt: "ChatGPT" },
-  { src: "https://mobbin.com/favicon.ico", alt: "Mobbin" },
-  { src: "https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png", alt: "Notion" },
+  { src: "figma.png", alt: "Figma" },
+  { src: "v0.png", alt: "v0" },
+  { src: "claude.png", alt: "Claude" },
+  { src: "chatgpt.png", alt: "ChatGPT" },
+  { src: "cursor.png", alt: "Cursor" },
+  { src: "notion.png", alt: "Notion" },
 ];
 
 function WavyUnderline() {
