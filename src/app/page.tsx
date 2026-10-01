@@ -1,7 +1,7 @@
 import Hero from "@/components/Hero";
 import Mindset from "@/components/Mindset";
 import LadoA from "@/components/LadoA";
-import CoWorkers from "@/components/CoWorkers";
+import MiProceso from "@/components/MiProceso";
 import Proyectos from "@/components/Proyectos";
 import Playground from "@/components/Playground";
 import Contacto from "@/components/Contacto";
@@ -13,7 +13,7 @@ export default function Home() {
       <Hero />
       <Mindset />
       <LadoA />
-      <CoWorkers />
+      <MiProceso />
       <Proyectos />
       <Playground />
       <Contacto />
