@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mi proceso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+  /* ===== Tokens tomados de la captura del portfolio (ajustar con los valores reales) ===== */
+  :root{
+    --page:#ece9f7;        /* lila de fondo de las secciones */
+    --surface:#ffffff;     /* secciones blancas, como "Mi stack" */
+    --ink:#141414;         /* texto */
+    --muted:#8c8a99;
+    --icon:#16123d;        /* azul oscuro de los íconos pixel */
+    --lavender:#a99ff2;    /* subrayados y recorrido */
+    --path:#8b7cf0;        /* recorrido principal */
+    --spark:#b43fe2;       /* violeta del logo: rol de apoyo y paquete */
+    --lime:#d6ea5f;        /* línea corta de acento */
+    --serif:'Newsreader', Georgia, serif;
+    --sans:'Manrope', system-ui, sans-serif;
+  }
+  *{box-sizing:border-box;margin:0}
+  body{background:var(--page);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+
+  /* sección blanca con confeti, igual que "Mi stack" */
+  .proceso{position:relative;background:var(--surface);overflow:hidden}
+  .confetti{position:absolute;inset:0;pointer-events:none}
+  .confetti i{position:absolute;border-radius:50%;opacity:.55}
+  .wrap{position:relative;max-width:1080px;margin:0 auto;padding:88px 32px;display:grid;grid-template-columns:260px 1fr;gap:56px}
+
+  .side svg{display:block;width:44px;height:44px;margin-bottom:14px}
+  .side h2{font-family:var(--sans);font-weight:500;font-size:34px;letter-spacing:-.01em}
+  .side .squiggle{display:block;width:170px;height:10px;margin:6px 0 0}
+
+  .switch{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+  .stage{all:unset;cursor:pointer;display:flex;flex-direction:column;gap:2px;padding:2px 0 8px;position:relative}
+  .stage .ttl{font-family:var(--serif);font-size:30px;line-height:1.1;color:var(--muted);transition:color .15s steps(2)}
+  .stage .date{font-size:12px;font-weight:500;color:var(--muted);letter-spacing:.02em}
+  .stage::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;border-radius:3px;background:var(--lavender);transform:scaleX(0);transform-origin:left;transition:transform .3s steps(5)}
+  .stage[aria-pressed="true"] .ttl{color:var(--ink);font-style:italic}
+  .stage[aria-pressed="true"] .date{color:var(--ink)}
+  .stage[aria-pressed="true"]::after{transform:scaleX(1)}
+  .stage:focus-visible{outline:2px solid var(--path);outline-offset:4px;border-radius:4px}
+  .arrow{font-size:20px;color:var(--muted)}
+
+  .lime{display:block;width:34px;height:3px;background:var(--lime);border-radius:2px;margin:26px 0 12px}
+  .desc{font-size:17px;line-height:1.55;max-width:56ch;min-height:3.2em}
+  .desc b{font-weight:700}
+
+  .canvas-box{position:relative;aspect-ratio:16/10;margin-top:22px}
+  canvas{display:block;width:100%;height:100%}
+  .legend{display:flex;flex-wrap:wrap;gap:20px;margin-top:10px;font-size:12px;color:var(--muted)}
+  .legend i{display:inline-block;width:14px;height:4px;border-radius:2px;margin-right:8px;vertical-align:3px}
+
+
+  @media (max-width:820px){
+    .wrap{grid-template-columns:1fr;gap:28px;padding:56px 16px}
+    .canvas-box{aspect-ratio:4/5}
+    .stage .ttl{font-size:26px}
+  }
+</style>
+</head>
+<body>
+
+<section class="proceso" aria-labelledby="proceso-title">
+  <div class="confetti" id="confetti" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="side">
+      <!-- ícono pixel (mismo lenguaje que los íconos del hero) -->
+      <svg viewBox="0 0 11 11" shape-rendering="crispEdges" aria-hidden="true" fill="var(--icon)">
+        <rect x="1" y="1" width="9" height="1"/><rect x="1" y="9" width="9" height="1"/>
+        <rect x="1" y="1" width="1" height="9"/><rect x="9" y="1" width="1" height="9"/>
+        <rect x="3" y="4" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/>
+        <rect x="5" y="7" width="3" height="1"/><rect x="1" y="3" width="9" height="0"/>
+        <rect x="2" y="2" width="1" height="1" fill="var(--spark)"/><rect x="4" y="2" width="1" height="1" fill="var(--lime)"/>
+      </svg>
+      <h2 id="proceso-title">Mi proceso</h2>
+      <svg class="squiggle" viewBox="0 0 150 10" aria-hidden="true"><path d="M2 6 C 30 2, 50 9, 80 5 S 130 3, 148 6" fill="none" stroke="var(--lavender)" stroke-width="2.5" stroke-linecap="round"/></svg>
+    </div>
+
+    <div class="main">
+      <div class="switch">
+        <button class="stage" data-stage="0" aria-pressed="true">
+          <span class="ttl">Antes</span><span class="date">Febrero 26</span>
+        </button>
+        <span class="arrow" aria-hidden="true">→</span>
+        <button class="stage" data-stage="1" aria-pressed="false">
+          <span class="ttl">Ahora</span><span class="date">Septiembre 26</span>
+        </button>
+      </div>
+
+      <span class="lime" aria-hidden="true"></span>
+      <p class="desc" id="desc" aria-live="polite"></p>
+
+      <div class="canvas-box"><canvas id="cv" role="img" aria-label="Animación: el proceso pasa de saltar entre seis herramientas a un recorrido directo de Idea a Claude, Claude Code y Publicado."></canvas></div>
+      <div class="legend" aria-hidden="true">
+        <span><i style="background:var(--path)"></i>Recorrido principal</span>
+        <span><i style="background:var(--spark)"></i>Rol de apoyo</span>
+      </div>    </div>
+  </div>
+</section>
+
+<script>
+(() => {
+  // ---------- Confeti de fondo ----------
+  const CONF = ['#a99ff2','#7aa7f5','#f2a6d8','#8fd9e8','#f5b56b','#b43fe2','#d6ea5f'];
+  const conf = document.getElementById('confetti');
+  for (let i=0;i<70;i++){
+    const d = document.createElement('i'); const s = 2 + Math.random()*4;
+    Object.assign(d.style, {left:Math.random()*100+'%', top:Math.random()*100+'%', width:s+'px', height:s+'px', background:CONF[i%CONF.length]});
+    conf.appendChild(d);
+  }
+
+  const cvs = document.getElementById('cv');
+  const ctx = cvs.getContext('2d');
+  const stageBtns = [...document.querySelectorAll('.stage')];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const P = 5;          // px por "pixel"
+  const NS = 7;         // tamaño del ícono en celdas
+  let W, H, cols, rows, dpr, wide = true;
+  let C = {};
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  function readColors(){
+    C = { bg:css('--surface'), ink:css('--ink'), muted:css('--muted'), icon:css('--icon'),
+          path:css('--path'), lav:css('--lavender'), spark:css('--spark'), sans:css('--sans') };
+  }
+
+  // ---------- Íconos pixel 7x7 ----------
+  const ICON = {
+    window:  ['#######','#.#.#.#','#######','#.....#','#.....#','#.....#','#######'],
+    chat:    ['.#####.','#.....#','#.#.#.#','#.....#','.#####.','..#....','.#.....'],
+    spark:   ['...#...','.#.#.#.','..###..','#######','..###..','.#.#.#.','...#...'],
+    bulb:    ['..###..','.#...#.','.#...#.','.#...#.','..#.#..','..###..','..###..'],
+    term:    ['#######','#######','#.....#','#.#...#','#..#..#','#.#.###','#######'],
+    flag:    ['#####..','######.','#####..','#......','#......','#......','###....'],
+  };
+  const NODES = {
+    chatgpt:{label:'ChatGPT', icon:'chat'}, v0:{label:'v0', icon:'window'}, stitch:{label:'Stitch', icon:'window'},
+    mobbin:{label:'Mobbin', icon:'window'}, figma:{label:'Figma', icon:'window'}, claude:{label:'Claude', icon:'spark'},
+    idea:{label:'Idea', icon:'bulb'}, code:{label:'Claude Code', icon:'term'}, live:{label:'Publicado', icon:'flag'}
+  };
+  const LAYOUT = {
+    antes:{
+      wide:{chatgpt:[.10,.20], v0:[.38,.12], stitch:[.64,.30], mobbin:[.90,.14], figma:[.22,.70], claude:[.72,.74]},
+      tall:{chatgpt:[.22,.08], v0:[.76,.17], stitch:[.30,.37], mobbin:[.80,.51], figma:[.22,.69], claude:[.72,.83]}
+    },
+    ahora:{
+      wide:{idea:[.08,.38], claude:[.36,.38], code:[.64,.38], live:[.91,.38], chatgpt:[.36,.78]},
+      tall:{idea:[.28,.08], claude:[.28,.35], code:[.28,.60], live:[.28,.85], chatgpt:[.74,.35]}
+    }
+  };
+  for (const k in NODES) Object.assign(NODES[k], {x:0,y:0,mv:null,vis:0,va:null,role:'tool',lit:false});
+
+  const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+  const rand = n => Math.floor(Math.random()*n);
+  const toCell = ([fx,fy]) => ({ x:clamp(Math.round(fx*cols), NS, cols-NS-1), y:clamp(Math.round(fy*rows), NS, rows-NS-4) });
+  let currentLayout = 'antes';
+  function placeAll(name){
+    const L = LAYOUT[name][wide ? 'wide' : 'tall'];
+    for (const k in L){ const c = toCell(L[k]); Object.assign(NODES[k], {x:c.x, y:c.y, mv:null}); }
+  }
+  const target = (k, name) => toCell(LAYOUT[name][wide ? 'wide' : 'tall'][k]);
+
+  function resize(){
+    const r = cvs.parentElement.getBoundingClientRect();
+    dpr = window.devicePixelRatio || 1;
+    W = r.width; H = r.height;
+    cvs.width = Math.round(W*dpr); cvs.height = Math.round(H*dpr);
+    cols = Math.floor(W/P); rows = Math.floor(H/P);
+    wide = cols/rows >= 1.15;
+  }
+
+  // ---------- Paths escalonados ----------
+  function messyPath(a, b){
+    const pts = [[a.x,a.y]]; let x=a.x, y=a.y, horiz=Math.random()<.5, detours=0, g=0;
+    while ((x!==b.x || y!==b.y) && g++ < 400){
+      const dx=b.x-x, dy=b.y-y;
+      if (horiz && dx===0) horiz=false; else if (!horiz && dy===0) horiz=true;
+      let dir, run;
+      if (detours < 3 && Math.random() < .25){ detours++; dir = Math.random()<.5 ? 1 : -1; run = 2+rand(6); }
+      else { const d = horiz ? dx : dy; dir = Math.sign(d); run = Math.min(Math.abs(d), 2+rand(10)); }
+      for (let i=0;i<run;i++){
+        if (horiz) x = clamp(x+dir, 1, cols-2); else y = clamp(y+dir, 1, rows-2);
+        pts.push([x,y]);
+      }
+      horiz = !horiz;
+    }
+    return pts;
+  }
+  function cleanPath(a, b){
+    const pts = [[a.x,a.y]]; let x=a.x, y=a.y; const push = () => pts.push([x,y]);
+    if (a.y === b.y || a.x === b.x){
+      while (x!==b.x){ x+=Math.sign(b.x-x); push(); }
+      while (y!==b.y){ y+=Math.sign(b.y-y); push(); }
+    } else if (wide){
+      const m = Math.round((a.x+b.x)/2);
+      while (x!==m){ x+=Math.sign(m-x); push(); } while (y!==b.y){ y+=Math.sign(b.y-y); push(); } while (x!==b.x){ x+=Math.sign(b.x-x); push(); }
+    } else {
+      const m = Math.round((a.y+b.y)/2);
+      while (y!==m){ y+=Math.sign(m-y); push(); } while (x!==b.x){ x+=Math.sign(b.x-x); push(); } while (y!==b.y){ y+=Math.sign(b.y-y); push(); }
+    }
+    return pts;
+  }
+
+  // ---------- Estado de animación ----------
+  let trail = [], segs = [];
+  const now = () => performance.now();
+  const easeBurst = t => t<=0?0 : t>=1?1 : t<.5 ? Math.pow(2,20*t-10)/2 : (2-Math.pow(2,-20*t+10))/2;  // arranca y frena de golpe
+  const quant = (v, steps=4) => Math.ceil(clamp(v,0,1)*steps)/steps;
+
+  function seg(pts, dur, opts={}){
+    return new Promise(res => {
+      if (dur <= 0){ addCells(pts, 0, pts.length, opts); res(); return; }
+      segs.push({pts, dur, start:now(), idx:0, opts, res});
+    });
+  }
+  function addCells(pts, from, to, o){
+    const t = now();
+    for (let i=from;i<to;i++){
+      if (o.ghost) continue;
+      if (o.dashed && i%2) continue;
+      trail.push({x:pts[i][0], y:pts[i][1], born:t, fade:o.fade ?? Infinity, die:null, color:o.color||'path'});
+    }
+  }
+
+  let epoch = 0;
+  const CANCEL = Symbol('cancel');
+  const wait = (ms, ep) => new Promise((res, rej) => setTimeout(() => ep===epoch ? res() : rej(CANCEL), ms));
+  const chk = ep => { if (ep !== epoch) throw CANCEL; };
+
+  function setVis(keys, to, dur){ const t = now(); keys.forEach(k => { const n = NODES[k]; n.va = {from:n.vis, to, start:t, dur:Math.max(1,dur)}; }); }
+  function moveNode(k, to, dur){ const n = NODES[k]; n.mv = {fx:n.x, fy:n.y, tx:to.x, ty:to.y, start:now(), dur:Math.max(1,dur)}; }
+  function dissolveTrail(dur){ const t = now(); trail.forEach(c => { if (!c.die) c.die = t + rand(dur); }); }
+  function litOnly(keys){ for (const k in NODES) NODES[k].lit = keys.includes(k); }
+
+  const DESC = [
+    '<b>Muchas herramientas, cada una para un pedacito.</b> Ideaba con ChatGPT, exploraba en v0 y Stitch, buscaba referencias en Mobbin y pulía con Claude. Saltaba de una a otra.',
+    '<b>Un recorrido directo.</b> Ideo y maqueto en Claude, con Claude Code lo llevo a código y lo publico. ChatGPT queda para revisar contenido.'
+  ];
+  const descEl = document.getElementById('desc');
+  let shown = -1;
+  function setStage(i){
+    const s = i === 0 ? 0 : 1;
+    if (s === shown) return; shown = s;
+    stageBtns.forEach((b,j) => b.setAttribute('aria-pressed', s===j ? 'true' : 'false'));
+    descEl.innerHTML = DESC[s];
+  }
+
+  // ---------- Fases ----------
+  const ANTES = ['chatgpt','v0','stitch','mobbin','figma','claude'];
+  const AHORA = ['idea','claude','code','live','chatgpt'];
+
+  function resetTo(layout, visibleKeys){
+    trail = []; segs = []; currentLayout = layout;
+    for (const k in NODES){ const n = NODES[k]; n.vis = visibleKeys.includes(k) ? 1 : 0; n.va = null; n.mv = null; n.role='tool'; n.lit=false; }
+    placeAll(layout);
+  }
+
+  async function phaseAntes(ep, instant){
+    setStage(0);
+    resetTo('antes', []);
+    setVis(ANTES, 1, instant ? 0 : 500);
+    if (!instant) await wait(450, ep);
+    const seq = ['chatgpt','v0','stitch','v0','mobbin','figma','claude','chatgpt','stitch','figma','claude','v0'];
+    for (let i=0;i<seq.length-1;i++){
+      litOnly([seq[i]]);
+      await seg(messyPath(NODES[seq[i]], NODES[seq[i+1]]), instant ? 0 : 220+rand(300), {fade: instant ? Infinity : 2400, color:'lav'});
+      chk(ep);
+      litOnly([seq[i+1]]);
+      if (!instant) await wait(70 + rand(420), ep);   // pausas irregulares
+    }
+    if (!instant) await wait(500, ep);
+  }
+
+  async function phaseCambio(ep){
+    setStage(1);
+    litOnly([]);
+    dissolveTrail(650);
+    setVis(['v0','stitch','mobbin','figma'], 0, 700);
+    await wait(550, ep);
+    currentLayout = 'ahora';
+    moveNode('claude', target('claude','ahora'), 650);
+    moveNode('chatgpt', target('chatgpt','ahora'), 800);
+    NODES.claude.role = 'main'; NODES.chatgpt.role = 'alt';
+    ['idea','code','live'].forEach(k => Object.assign(NODES[k], target(k,'ahora')));
+    await wait(250, ep);
+    setVis(['idea','code','live'], 1, 600);
+    await wait(900, ep);
+    trail = [];
+  }
+
+  async function phaseAhora(ep, instant){
+    setStage(2);
+    if (instant){ resetTo('ahora', AHORA); NODES.claude.role='main'; NODES.chatgpt.role='alt'; }
+    const chain = ['idea','claude','code','live'];
+    for (let i=0;i<chain.length-1;i++){
+      litOnly(chain.slice(0,i+1));
+      await seg(cleanPath(NODES[chain[i]], NODES[chain[i+1]]), instant ? 0 : 200, {fade:Infinity});
+      chk(ep);
+      if (!instant) await wait(110, ep);
+    }
+    litOnly(chain);
+    await seg(cleanPath(NODES.claude, NODES.chatgpt), instant ? 0 : 260, {fade:Infinity, dashed:true, color:'spark'});
+    chk(ep);
+    NODES.chatgpt.lit = true;
+    if (instant) return;
+
+    for (let lap=0; lap<3; lap++){
+      for (let i=0;i<chain.length-1;i++){
+        await seg(cleanPath(NODES[chain[i]], NODES[chain[i+1]]), 170, {ghost:true});
+        chk(ep);
+        await wait(lap===0 && i===0 ? 160 : 90, ep);
+      }
+      await wait(380, ep);
+    }
+    await wait(1100, ep);
+    dissolveTrail(650);
+    setVis(AHORA, 0, 650);
+    await wait(800, ep);
+  }
+
+  async function run(fromStage = 0){
+    const ep = ++epoch;
+    try{
+      if (fromStage === 2){ resetTo('ahora', AHORA); NODES.claude.role='main'; NODES.chatgpt.role='alt'; await phaseAhora(ep); }
+      while (true){ await phaseAntes(ep); await phaseCambio(ep); await phaseAhora(ep); }
+    } catch(e){ if (e !== CANCEL) console.error(e); }
+  }
+  async function showStatic(i){
+    const ep = ++epoch;
+    try{ i === 0 ? await phaseAntes(ep, true) : await phaseAhora(ep, true); } catch(e){ if (e !== CANCEL) console.error(e); }
+  }
+
+  // ---------- Render ----------
+  function cell(x, y, color, a=1, gap=1){
+    ctx.globalAlpha = a; ctx.fillStyle = color;
+    ctx.fillRect(x*P, y*P, P-gap, P-gap);
+  }
+  const hash = (k, i) => { let h = 2166136261; const s = k + ':' + i; for (let c=0;c<s.length;c++){ h ^= s.charCodeAt(c); h = Math.imul(h, 16777619); } return ((h>>>0) % 1000) / 1000; };
+
+  function drawNode(k){
+    const n = NODES[k]; if (n.vis <= 0.001) return;
+    const half = Math.floor(NS/2);
+    const x0 = Math.round(n.x) - half, y0 = Math.round(n.y) - half;
+    ctx.globalAlpha = 1; ctx.fillStyle = C.bg;
+    ctx.fillRect((x0-1)*P, (y0-1)*P, (NS+2)*P, (NS+2)*P);
+    const bmp = ICON[n.icon];
+    const alpha = n.lit || n.role!=='tool' ? 1 : .4;
+    for (let dy=0; dy<NS; dy++) for (let dx=0; dx<NS; dx++){
+      if (bmp[dy][dx] !== '#') continue;
+      if (hash(k, dy*NS+dx) > n.vis) continue;      // disolución pixel a pixel
+      cell(x0+dx, y0+dy, C.icon, alpha, 0);
+    }
+    // etiqueta
+    ctx.globalAlpha = quant(n.vis, 3);
+    ctx.font = `500 ${wide ? 13 : 12}px ${C.sans}`;
+    ctx.textBaseline = 'top'; ctx.textAlign = 'center';
+    const label = (k==='chatgpt' && n.role==='alt') ? 'ChatGPT · contenido' : n.label;
+    const tw = ctx.measureText(label).width;
+    const cx = clamp((Math.round(n.x)+.5)*P, tw/2+6, W-tw/2-6);
+    const ty = (y0+NS+1)*P + 2;
+    ctx.fillStyle = C.bg; ctx.fillRect(cx - tw/2 - 4, ty - 2, tw + 8, 19);
+    ctx.fillStyle = n.lit || n.role!=='tool' ? C.ink : C.muted;
+    ctx.fillText(label, cx, ty);
+    ctx.globalAlpha = 1;
+  }
+
+  function frame(){
+    const t = now();
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.globalAlpha = 1; ctx.clearRect(0,0,W,H);
+
+    for (const k in NODES){
+      const n = NODES[k];
+      if (n.va){ const p = clamp((t-n.va.start)/n.va.dur, 0, 1); n.vis = n.va.from + (n.va.to-n.va.from)*quant(p, 6); if (p>=1) n.va=null; }
+      if (n.mv){
+        const p = clamp((t-n.mv.start)/n.mv.dur, 0, 1);
+        const px = easeBurst(clamp(p/0.6, 0, 1)), py = easeBurst(clamp((p-0.4)/0.6, 0, 1));   // movimiento en "L"
+        n.x = Math.round(n.mv.fx + (n.mv.tx-n.mv.fx)*px);
+        n.y = Math.round(n.mv.fy + (n.mv.ty-n.mv.fy)*py);
+        if (p>=1) n.mv = null;
+      }
+    }
+
+    const ghosts = [];
+    segs = segs.filter(s => {
+      const p = clamp((t - s.start)/s.dur, 0, 1);
+      const n = Math.max(1, Math.floor(easeBurst(p) * s.pts.length));
+      if (n > s.idx){ addCells(s.pts, s.idx, n, s.opts); s.idx = n; }
+      if (s.opts.ghost) ghosts.push(s);
+      else if (p < 1){ const h = s.pts[n-1]; cell(h[0], h[1], C.icon, 1); }
+      if (p >= 1){ s.res(); return false; }
+      return true;
+    });
+
+    trail = trail.filter(c => {
+      let a = 1;
+      if (c.fade !== Infinity) a = 1 - (t - c.born)/c.fade;
+      if (c.die && t >= c.die) return false;
+      if (a <= 0) return false;
+      cell(c.x, c.y, C[c.color], quant(a, 4));
+      return true;
+    });
+
+    ghosts.forEach(s => {
+      const i = s.idx - 1;
+      for (let k=0;k<6;k++){ const q = s.pts[i-k]; if (q) cell(q[0], q[1], C.spark, 1 - k/6); }
+    });
+
+    for (const k in NODES) drawNode(k);
+    requestAnimationFrame(frame);
+  }
+
+  function init(){
+    readColors(); resize();
+    stageBtns.forEach((b,i) => b.addEventListener('click', () => reduce ? showStatic(i) : run(i===0 ? 0 : 2)));
+    let rt;
+    // solo reinicia si cambia el ancho (en mobile el alto cambia al scrollear)
+    window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => {
+      const prevW = W; resize(); if (Math.abs(W - prevW) < 1) return;
+      const s = currentLayout==='ahora' ? 1 : 0; reduce ? showStatic(s) : run(s ? 2 : 0);
+    }, 200); });
+    requestAnimationFrame(frame);
+    reduce ? showStatic(1) : run(0);
+  }
+  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(init);
+})();
+</script>
+</body>
+</html>
