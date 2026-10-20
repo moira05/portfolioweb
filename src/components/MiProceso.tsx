@@ -524,7 +524,7 @@ export default function MiProceso() {
               className="font-manrope text-[1rem] font-normal leading-snug text-[#2d2d2d] md:text-[1.25rem]"
             >
               {uiStage === 0
-                ? "Muchas herramientas, cada una para un pedacito. Ideaba con ChatGPT, exploraba en v0 y Stitch, buscaba referencias en Mobbin y pulía con Claude. Saltaba de una a otra."
+                ? "El proceso estaba fragmentado en múltiples herramientas. Ideaba con ChatGPT, exploraba con v0 y Stitch, buscaba referencias en Mobbin y refinaba con Claude. Un constante ir y venir entre plataformas."
                 : "Un recorrido directo. Ideo y maqueto en Claude, con Claude Code lo llevo a código y lo publico. ChatGPT queda para revisar contenido."}
             </p>
 
