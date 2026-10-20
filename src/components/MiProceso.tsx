@@ -507,87 +507,90 @@ export default function MiProceso() {
   return (
     <section className="bg-white px-6 py-14 md:px-10 md:py-20">
       <div className="mx-auto max-w-screen-xl">
+        <div className="flex flex-col gap-8 md:flex-row md:items-start md:gap-12">
 
-        {/* Header */}
-        <div className="mb-8 flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-          <div className="flex flex-col gap-1 w-fit">
-            <h2 className="font-manrope text-[2rem] font-semibold tracking-[0.4px] text-black md:text-[3rem]">
-              Mi proceso
-            </h2>
-            <DrawUnderline />
+          {/* Left column — 40%: título + descripción + tabs */}
+          <div className="flex flex-col gap-6 md:w-[40%] md:shrink-0">
+
+            <div className="flex flex-col gap-1 w-fit">
+              <h2 className="font-manrope text-[2rem] font-semibold tracking-[0.4px] text-black md:text-[3rem]">
+                Mi proceso
+              </h2>
+              <DrawUnderline />
+            </div>
+
+            <p
+              aria-live="polite"
+              className="font-manrope text-[1rem] font-normal leading-snug text-[#2d2d2d] md:text-[1.25rem]"
+            >
+              {uiStage === 0
+                ? "Muchas herramientas, cada una para un pedacito. Ideaba con ChatGPT, exploraba en v0 y Stitch, buscaba referencias en Mobbin y pulía con Claude. Saltaba de una a otra."
+                : "Un recorrido directo. Ideo y maqueto en Claude, con Claude Code lo llevo a código y lo publico. ChatGPT queda para revisar contenido."}
+            </p>
+
+            {/* Stage buttons */}
+            <div className="flex items-center gap-6">
+              <button
+                aria-pressed={uiStage === 0}
+                onClick={() => handleClick(0)}
+                className="relative flex cursor-pointer flex-col gap-[2px] border-none bg-transparent pb-2 text-left"
+              >
+                <span className={`font-vollkorn text-[1.3rem] leading-tight transition-colors duration-150 ${
+                  uiStage === 0 ? "text-[#171717] italic" : "text-[#888]"
+                }`}>
+                  Antes
+                </span>
+                <span className={`font-manrope text-[0.6rem] font-semibold tracking-widest uppercase transition-colors duration-150 ${
+                  uiStage === 0 ? "text-[#171717]" : "text-[#888]"
+                }`}>
+                  Febrero 26
+                </span>
+                <div
+                  className="absolute bottom-0 left-0 right-0 h-[3px] rounded-full bg-[#b0aaf2] origin-left"
+                  style={{ transform: uiStage === 0 ? "scaleX(1)" : "scaleX(0)", transition: "transform 0.3s steps(5)" }}
+                />
+              </button>
+
+              <span className="font-manrope text-[1.25rem] text-[#aaa]" aria-hidden="true">→</span>
+
+              <button
+                aria-pressed={uiStage === 1}
+                onClick={() => handleClick(1)}
+                className="relative flex cursor-pointer flex-col gap-[2px] border-none bg-transparent pb-2 text-left"
+              >
+                <span className={`font-vollkorn text-[1.3rem] leading-tight transition-colors duration-150 ${
+                  uiStage === 1 ? "text-[#171717] italic" : "text-[#888]"
+                }`}>
+                  Ahora
+                </span>
+                <span className={`font-manrope text-[0.6rem] font-semibold tracking-widest uppercase transition-colors duration-150 ${
+                  uiStage === 1 ? "text-[#171717]" : "text-[#888]"
+                }`}>
+                  Septiembre 26
+                </span>
+                <div
+                  className="absolute bottom-0 left-0 right-0 h-[3px] rounded-full bg-[#b0aaf2] origin-left"
+                  style={{ transform: uiStage === 1 ? "scaleX(1)" : "scaleX(0)", transition: "transform 0.3s steps(5)" }}
+                />
+              </button>
+            </div>
+
           </div>
 
-          {/* Stage buttons — interaction from maqueta, typography from site */}
-          <div className="flex items-center gap-6">
-            <button
-              aria-pressed={uiStage === 0}
-              onClick={() => handleClick(0)}
-              className="relative flex cursor-pointer flex-col gap-[2px] border-none bg-transparent pb-2 text-left"
-            >
-              <span className={`font-vollkorn text-[1.3rem] leading-tight transition-colors duration-150 ${
-                uiStage === 0 ? "text-[#171717] italic" : "text-[#888]"
-              }`}>
-                Antes
-              </span>
-              <span className={`font-manrope text-[0.6rem] font-semibold tracking-widest uppercase transition-colors duration-150 ${
-                uiStage === 0 ? "text-[#171717]" : "text-[#888]"
-              }`}>
-                Febrero 26
-              </span>
-              <div
-                className="absolute bottom-0 left-0 right-0 h-[3px] rounded-full bg-[#b0aaf2] origin-left"
-                style={{ transform: uiStage === 0 ? "scaleX(1)" : "scaleX(0)", transition: "transform 0.3s steps(5)" }}
-              />
-            </button>
-
-            <span className="font-manrope text-[1.25rem] text-[#aaa]" aria-hidden="true">→</span>
-
-            <button
-              aria-pressed={uiStage === 1}
-              onClick={() => handleClick(1)}
-              className="relative flex cursor-pointer flex-col gap-[2px] border-none bg-transparent pb-2 text-left"
-            >
-              <span className={`font-vollkorn text-[1.3rem] leading-tight transition-colors duration-150 ${
-                uiStage === 1 ? "text-[#171717] italic" : "text-[#888]"
-              }`}>
-                Ahora
-              </span>
-              <span className={`font-manrope text-[0.6rem] font-semibold tracking-widest uppercase transition-colors duration-150 ${
-                uiStage === 1 ? "text-[#171717]" : "text-[#888]"
-              }`}>
-                Septiembre 26
-              </span>
-              <div
-                className="absolute bottom-0 left-0 right-0 h-[3px] rounded-full bg-[#b0aaf2] origin-left"
-                style={{ transform: uiStage === 1 ? "scaleX(1)" : "scaleX(0)", transition: "transform 0.3s steps(5)" }}
-              />
-            </button>
+          {/* Right column — 60%: canvas */}
+          <div
+            ref={wrapRef}
+            className="w-full rounded-[20px] overflow-hidden border border-[#e5e5e5] aspect-[4/5] md:aspect-[16/10] md:flex-1"
+          >
+            <canvas
+              ref={canvasRef}
+              className="block w-full h-full"
+              role="img"
+              aria-label="Animación del proceso de diseño: de varias herramientas dispersas a un recorrido directo Idea → Claude → Claude Code → Publicado."
+            />
           </div>
+
         </div>
-
-        {/* Description */}
-        <p
-          aria-live="polite"
-          className="font-manrope text-[1rem] font-normal leading-snug text-[#2d2d2d] max-w-[600px] mb-8 md:text-[1.25rem]"
-        >
-          {uiStage === 0
-            ? "Muchas herramientas, cada una para un pedacito. Ideaba con ChatGPT, exploraba en v0 y Stitch, buscaba referencias en Mobbin y pulía con Claude. Saltaba de una a otra."
-            : "Un recorrido directo. Ideo y maqueto en Claude, con Claude Code lo llevo a código y lo publico. ChatGPT queda para revisar contenido."}
-        </p>
-
-        {/* Canvas — aspect ratio matches maqueta */}
-        <div
-          ref={wrapRef}
-          className="w-full rounded-[20px] overflow-hidden border border-[#e5e5e5] aspect-[4/5] md:aspect-[16/10]"
-        >
-          <canvas
-            ref={canvasRef}
-            className="block w-full h-full"
-            role="img"
-            aria-label="Animación del proceso de diseño: de varias herramientas dispersas a un recorrido directo Idea → Claude → Claude Code → Publicado."
-          />
-        </div>
-
       </div>
     </section>
   );
