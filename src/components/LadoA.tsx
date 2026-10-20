@@ -102,7 +102,7 @@ export default function LadoA() {
             const b = LADO_B[i];
             return (
               <div
-                key={a.titleSans}
+                key={`${a.titleSans}-${i}`}
                 style={{ perspective: "1000px" }}
                 className="md:h-[420px]"
               >
