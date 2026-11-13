@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 const navLinks = [
-  { label: "Proyectos",    href: "#proyectos",                         arrowRotation: "rotate-90",           external: false, sectionId: "proyectos" },
-  { label: "Sobre mi",     href: "#lado-a",                            arrowRotation: "rotate-90",           external: false, sectionId: "lado-a"    },
+  { label: "Proyectos",    href: "/#proyectos",                        arrowRotation: "rotate-90",           external: false, sectionId: "proyectos" },
+  { label: "Sobre mi",     href: "/sobre-mi",                          arrowRotation: "rotate-90",           external: false, sectionId: null        },
   { label: "Pensamientos", href: "https://medium.com/@moirixand",      arrowRotation: "-rotate-[54.78deg]",  external: true,  sectionId: null        },
-  { label: "Contacto",     href: "#contacto",                          arrowRotation: "rotate-90",           external: false, sectionId: "contacto"  },
 ];
 
 function ArrowIcon({ className }: { className?: string }) {
@@ -18,7 +18,7 @@ function ArrowIcon({ className }: { className?: string }) {
   );
 }
 
-export default function Navbar() {
+function NavbarContent() {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -38,7 +38,6 @@ export default function Navbar() {
     return () => observers.forEach((o) => o.disconnect());
   }, []);
 
-  // Lock body scroll when menu is open
   useEffect(() => {
     if (menuOpen) {
       document.body.style.overflow = "hidden";
@@ -51,13 +50,18 @@ export default function Navbar() {
   const handleClick = (sectionId: string | null) => (e: React.MouseEvent<HTMLAnchorElement>) => {
     setMenuOpen(false);
     if (!sectionId) return;
+    const el = document.getElementById(sectionId);
+    if (!el) return;
     e.preventDefault();
-    document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
+
+  // suppress unused warning — activeSection reserved for future active-link styling
+  void activeSection;
 
   return (
     <>
-      <nav className="w-full border-b border-[#4b5563] bg-white relative z-50">
+      <nav className="w-full border-b border-[#4b5563]/20 bg-white relative z-50">
         <div className="mx-auto flex h-[77px] max-w-screen-xl items-center justify-between px-6 md:px-10">
           {/* Logo */}
           <Link href="/">
@@ -76,7 +80,6 @@ export default function Navbar() {
                   className="group flex items-center gap-1 font-manrope text-[18px] leading-none font-normal text-[#131313] transition-all hover:opacity-60"
                 >
                   {label}
-                  <ArrowIcon className={`size-[18px] ${arrowRotation} transition-transform group-hover:translate-x-0.5`} />
                 </Link>
               </li>
             ))}
@@ -132,7 +135,6 @@ export default function Navbar() {
                 }}
               >
                 {label}
-                <ArrowIcon className={`size-[22px] ${arrowRotation}`} />
               </Link>
               {idx < navLinks.length - 1 && (
                 <div className="h-px bg-[#4b5563]/20" />
@@ -143,4 +145,10 @@ export default function Navbar() {
       </div>
     </>
   );
+}
+
+export default function Navbar() {
+  const pathname = usePathname();
+  if (pathname.startsWith("/proyectos/")) return null;
+  return <NavbarContent />;
 }

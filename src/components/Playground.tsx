@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import DrawUnderline from "./DrawUnderline";
+import SectionTitle from "./SectionTitle";
 
 const videos = [
   "/videos/video1.mp4",
@@ -36,12 +36,7 @@ export default function Playground() {
   return (
     <section className="bg-[#eeedf5] px-10 py-16">
       <div className="mx-auto max-w-screen-xl">
-        <div className="flex flex-col gap-1 mb-10 w-fit">
-          <h2 className="font-manrope text-[2rem] font-semibold tracking-[0.4px] text-black md:text-[3rem]">
-            Playground
-          </h2>
-          <DrawUnderline />
-        </div>
+        <SectionTitle>Playground</SectionTitle>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {videos.map((src) => (
             <VideoCard key={src} src={src} />

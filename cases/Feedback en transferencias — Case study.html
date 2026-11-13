@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Feedback en transferencias — Case study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Vollkorn:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EFECF8; --surface:#FFFFFF; --ink:#1C1B3F; --muted:#5E5C80; --line:#D9D4EE;
+  --blue:#5B45D6; --blue-soft:#E6E0FA; --pink:#A99BF0; --navy:#1B1B3A; --on-navy:#FFFFFF;
+  --bad:#B3402F; --bad-soft:#FBEAE6;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#14132E; --surface:#1E1D42; --ink:#EEEBFA; --muted:#A9A6CC; --line:#35336A;
+    --blue:#A99BFF; --blue-soft:#2A2760; --pink:#B7A9FF; --navy:#0F0E27; --on-navy:#FFFFFF;
+    --bad:#FF9D8C; --bad-soft:#3B2230;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14132E; --surface:#1E1D42; --ink:#EEEBFA; --muted:#A9A6CC; --line:#35336A;
+  --blue:#A99BFF; --blue-soft:#2A2760; --pink:#B7A9FF; --navy:#0F0E27; --on-navy:#FFFFFF;
+  --bad:#FF9D8C; --bad-soft:#3B2230;
+  color-scheme:dark;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Manrope",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+main{max-width:880px;margin:0 auto;padding:56px 24px 96px}
+h1{font-size:clamp(34px,6vw,56px);line-height:1.05;font-weight:600;letter-spacing:-.02em;margin:0 0 20px;max-width:16ch}
+h2{font-size:clamp(24px,3.6vw,32px);line-height:1.15;font-weight:600;letter-spacing:-.015em;margin:72px 0 16px}
+h1,h2{font-family:"Vollkorn",Georgia,"Times New Roman",serif}
+h3{font-size:18px;font-weight:600;margin:0 0 6px}
+p{margin:0 0 16px;max-width:66ch}
+.lede{font-size:clamp(18px,2.4vw,22px);color:var(--muted);max-width:56ch;margin-bottom:36px}
+.pill{display:inline-block;background:var(--surface);color:var(--ink);border:1px solid var(--line);font-size:13px;font-weight:600;padding:4px 14px;border-radius:999px;margin-bottom:24px}
+dl.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px 32px;margin:0;padding:24px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+dl.meta dt{font-size:14px;color:var(--muted);margin-bottom:2px}
+dl.meta dd{margin:0;font-weight:500}
+
+/* antes / después */
+.flow{display:grid;gap:16px;grid-template-columns:1fr;margin:28px 0 8px}
+@media(min-width:760px){.flow{grid-template-columns:1.15fr 1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px}
+.panel.after{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
+.panel h3{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.panel h3 span{font-size:14px;font-weight:500;color:var(--muted)}
+.chain{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:10px}
+.chain li{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:10px;background:var(--bad-soft);color:var(--ink);font-size:15.5px;line-height:1.4}
+.chain li b{flex:none;width:24px;height:24px;border-radius:50%;background:var(--bad);color:var(--bg);font-size:13px;display:grid;place-items:center}
+.one{margin-top:16px;display:grid;gap:10px}
+.one .step{padding:12px 14px;border-radius:10px;background:var(--blue-soft);font-size:15.5px;line-height:1.4}
+.one .drop{border:2px dashed var(--blue);border-radius:10px;padding:22px 14px;text-align:center;color:var(--blue);font-weight:600;font-size:15px}
+
+/* proceso */
+.steps{list-style:none;padding:0;margin:24px 0 0;display:grid;gap:0;border-left:2px solid var(--line)}
+.steps li{position:relative;padding:0 0 28px 28px}
+.steps li::before{content:"";position:absolute;left:-7px;top:7px;width:12px;height:12px;border-radius:50%;background:var(--blue)}
+.steps li:last-child{padding-bottom:0}
+.steps p{margin:0;color:var(--muted)}
+
+/* test */
+.facts{display:grid;gap:0;margin:20px 0;border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
+.facts div{display:flex;justify-content:space-between;gap:16px;padding:14px 18px;border-top:1px solid var(--line)}
+.facts div:first-child{border-top:0}
+.facts span{color:var(--muted)}
+.facts strong{font-weight:600;white-space:nowrap}
+blockquote{margin:20px 0;padding:4px 0 4px 20px;border-left:3px solid var(--pink);color:var(--muted);max-width:60ch}
+
+/* herramientas IA */
+.tools{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin-top:20px}
+.tool{border:1px solid var(--line);border-radius:14px;padding:18px;background:var(--surface)}
+.tool p{font-size:15px;color:var(--muted);margin:0}
+
+/* éxito */
+.goals{display:grid;gap:14px;margin-top:20px}
+.goal{display:grid;grid-template-columns:auto 1fr;gap:6px 20px;align-items:baseline;padding:18px 20px;border-radius:14px;background:var(--navy);color:var(--on-navy)}
+.goal .n{font-size:34px;font-weight:600;letter-spacing:-.02em}
+.goal p{margin:0;font-size:15.5px;opacity:.92}
+.goal h3{margin:0 0 2px}
+
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--surface);margin:20px 0 8px}
+.bench{width:100%;min-width:900px;border-collapse:collapse;font-size:14.5px}
+.bench th,.bench td{padding:11px 10px;text-align:center;border-top:1px solid var(--line)}
+.bench thead th{border-top:0;font-weight:600;color:var(--muted);font-size:13.5px;padding-top:14px;padding-bottom:14px}
+.bench tbody th{text-align:left;font-weight:500;padding-left:18px;color:var(--ink);min-width:200px}
+.bench td::before{content:"";display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.bench td.y::before{background:var(--blue)}
+.bench td.n::before{background:var(--line)}
+.bench .us{background:var(--blue-soft)}
+.bench .tot{font-weight:600;padding-right:18px;white-space:nowrap}
+.legend{font-size:14px;color:var(--muted);margin:0 0 16px}
+h1 em{font-style:italic;font-weight:500}
+h2{margin-bottom:22px}
+h2::after{content:"";display:block;width:150px;height:10px;margin-top:8px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='10' viewBox='0 0 150 10'%3E%3Cpath d='M2 6 Q 14 0 26 5 T 50 5 T 74 5 T 98 5 T 122 5 T 148 5' fill='none' stroke='%23A99BF0' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat}
+.panel,.tool,.facts,.scroll,.goal{border-radius:20px}
+.note{margin-top:72px;padding-top:20px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+ul.clean{margin:0 0 16px;padding-left:20px;max-width:64ch}
+ul.clean li{margin-bottom:6px}
+</style>
+</head>
+<body>
+<main>
+  <span class="pill">Case study</span>
+  <h1>Feedback inmediato en transferencias a <em>otras entidades</em></h1>
+  <p class="lede">Pasamos de más de un minuto de incertidumbre a una confirmación en segundos, sin perder la certeza de qué pasó con el dinero.</p>
+
+  <dl class="meta">
+    <div><dt>Rol</dt><dd>Product Designer</dd></div>
+    <div><dt>Industria</dt><dd>Fintech, Argentina</dd></div>
+    <div><dt>Período</dt><dd>2022 – 2023</dd></div>
+    <div><dt>Plataformas</dt><dd>iOS y Android</dd></div>
+    <div><dt>Equipo</dt><dd>Producto, Diseño, Desarrollo (front y back), QA y Compliance</dd></div>
+  </dl>
+
+  <h2>El problema</h2>
+  <p>Cuando una persona transfería a una cuenta de otro banco, tardaba más de un minuto en saber si la operación había salido bien o había sido rechazada. Esa incertidumbre era uno de los principales motivos de contacto al equipo de atención al cliente.</p>
+  <p>El problema aparecía solo en transferencias interbancarias. Entre usuarios de la misma app el flujo ya funcionaba bien.</p>
+
+  <div class="flow">
+    <div class="panel">
+      <h3>Antes <span>Más de 1 minuto</span></h3>
+      <ol class="chain">
+        <li><b>1</b>Pantalla de espera con el mensaje “Danos un minuto”</li>
+        <li><b>2</b>Confirmación que aclara que “puede demorar unos minutos”</li>
+        <li><b>3</b>Sin certeza sobre si salió bien o mal</li>
+      </ol>
+    </div>
+    <div class="panel after">
+      <h3>Después <span>4 a 7 segundos</span></h3>
+      <div class="one">
+        <div class="step">Pantalla de éxito con monto, destinatario y banco</div>
+        <div class="drop">Compartir comprobante</div>
+        <div class="step">Push y mail con el resultado final de la operación</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Diagnóstico</h2>
+  <p>Arrancamos con un kick-off del equipo, un benchmark y una revisión de los reclamos que llegaban a atención al cliente.</p>
+  <div class="facts">
+    <div><span>Transferencias entre usuarios de la app</span><strong>5 a 10 segundos</strong></div>
+    <div><span>Transferencias a otras entidades</span><strong>30 segundos a más de 1 minuto</strong></div>
+    <div><span>Apps de la competencia</span><strong>2 a 4 segundos</strong></div>
+  </div>
+  <p>Ni siquiera en el mejor escenario llegábamos al tiempo de la competencia. Además, el benchmark de 8 apps nos mostró qué ofrecía cada una en cada paso (comprobante compartible, avisos por mail o push, buscador de contactos) y cuánto esfuerzo pedía cada flujo en taps, scrolls y expansiones.</p>
+  <div class="scroll">
+    <table class="bench">
+      <caption class="sr-only" style="position:absolute;left:-9999px">Benchmark de funcionalidades en transferencias entre 8 apps</caption>
+      <thead><tr><th scope="col">Funcionalidad</th><th scope="col">Brubank</th><th scope="col">Naranja X</th><th scope="col">Mercado Pago</th><th scope="col">BBVA</th><th scope="col">Modo</th><th scope="col">Santander</th><th scope="col">Galicia</th><th scope="col" class="us">Nuestra app</th><th scope="col">Total</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Pregunta de satisfacción al final</th><td class="n" aria-label="No"></td><td class="n" aria-label="No"></td><td class="n" aria-label="No"></td><td class="y" aria-label="Sí"></td><td class="n" aria-label="No"></td><td class="n" aria-label="No"></td><td class="n" aria-label="No"></td><td class="n us" aria-label="No"></td><td class="tot">1/8</td></tr>
+        <tr><th scope="row">Escanear CBU desde una imagen</th><td class="y" aria-label="Sí"></td><td class="n" aria-label="No"></td><td class="n" aria-label="No"></td><td class="n" aria-label="No"></td><td class="n" aria-label="No"></td><td class="n" aria-label="No"></td><td class="n" aria-label="No"></td><td class="n us" aria-label="No"></td><td class="tot">1/8</td></tr>
+        <tr><th scope="row">Agendar contacto al transferir</th><td class="y" aria-label="Sí"></td><td class="n" aria-label="No"></td><td class="n" aria-label="No"></td><td class="y" aria-label="Sí"></td><td class="n" aria-label="No"></td><td class="n" aria-label="No"></td><td class="n" aria-label="No"></td><td class="n us" aria-label="No"></td><td class="tot">2/8</td></tr>
+        <tr><th scope="row">Asignar apodo</th><td class="y" aria-label="Sí"></td><td class="y" aria-label="Sí"></td><td class="n" aria-label="No"></td><td class="n" aria-label="No"></td><td class="n" aria-label="No"></td><td class="n" aria-label="No"></td><td class="n" aria-label="No"></td><td class="n us" aria-label="No"></td><td class="tot">2/8</td></tr>
+        <tr><th scope="row">Buscador de contactos</th><td class="y" aria-label="Sí"></td><td class="y" aria-label="Sí"></td><td class="y" aria-label="Sí"></td><td class="y" aria-label="Sí"></td><td class="n" aria-label="No"></td><td class="n" aria-label="No"></td><td class="n" aria-label="No"></td><td class="y us" aria-label="Sí"></td><td class="tot">5/8</td></tr>
+        <tr><th scope="row">Compartir comprobante al finalizar</th><td class="y" aria-label="Sí"></td><td class="y" aria-label="Sí"></td><td class="y" aria-label="Sí"></td><td class="y" aria-label="Sí"></td><td class="y" aria-label="Sí"></td><td class="y" aria-label="Sí"></td><td class="y" aria-label="Sí"></td><td class="n us" aria-label="No"></td><td class="tot">7/8</td></tr>
+        <tr><th scope="row">Volver a transferir</th><td class="y" aria-label="Sí"></td><td class="n" aria-label="No"></td><td class="n" aria-label="No"></td><td class="y" aria-label="Sí"></td><td class="y" aria-label="Sí"></td><td class="n" aria-label="No"></td><td class="n" aria-label="No"></td><td class="y us" aria-label="Sí"></td><td class="tot">4/8</td></tr>
+        <tr><th scope="row">Mail por éxito o error</th><td class="n" aria-label="No"></td><td class="y" aria-label="Sí"></td><td class="y" aria-label="Sí"></td><td class="n" aria-label="No"></td><td class="n" aria-label="No"></td><td class="y" aria-label="Sí"></td><td class="n" aria-label="No"></td><td class="n us" aria-label="No"></td><td class="tot">3/8</td></tr>
+        <tr><th scope="row">Push con el resultado</th><td class="n" aria-label="No"></td><td class="y" aria-label="Sí"></td><td class="n" aria-label="No"></td><td class="n" aria-label="No"></td><td class="n" aria-label="No"></td><td class="n" aria-label="No"></td><td class="n" aria-label="No"></td><td class="n us" aria-label="No"></td><td class="tot">1/8</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="legend">Punto azul: la app ofrece la funcionalidad. Punto gris: no la ofrece.</p>
+  <p>Nuestra app no ofrecía comprobante compartible ni avisos por push o mail sobre el resultado, justo lo que la propuesta sumó.</p>
+  <p>Un límite importante: no conocíamos todos los errores que podían ocurrir en una transferencia. Desarrollo trabajó en paralelo en identificarlos y tipificarlos, y diseñamos teniendo en cuenta esas limitaciones técnicas.</p>
+
+  <h2>La propuesta</h2>
+  <ol class="steps">
+    <li>
+      <h3>Mostrar éxito en todas las transferencias</h3>
+      <p>En lugar de esperar a que la operación se complete en todas las instancias (suele tardar minutos, pero puede demorar hasta 24 o 48 horas), mostramos la pantalla de éxito enseguida.</p>
+    </li>
+    <li>
+      <h3>Avisar el resultado real después</h3>
+      <p>En una segunda etapa, cuando la red interbancaria aprueba o rechaza la operación, le avisamos al usuario por push y por mail.</p>
+    </li>
+    <li>
+      <h3>Cubrir el caso de error</h3>
+      <p>Menos del 2% de las operaciones falla. Esas personas ven la pantalla de éxito y luego reciben un aviso claro: no pudimos completar la transferencia, el dinero volvió a su cuenta y pueden intentarlo de nuevo.</p>
+    </li>
+    <li>
+      <h3>Avisar cuando el sistema bancario falla</h3>
+      <p>Diseñamos un mensaje preventivo (circuit breaker) para el inicio de la transferencia y el centro de ayuda, que avisa cuando hay inconvenientes con el sistema bancario y la operación puede demorar más.</p>
+    </li>
+  </ol>
+
+  <h2>Decisiones de diseño</h2>
+  <ul class="clean">
+    <li><strong>Loading:</strong> pasó de una pantalla a pantalla completa con “Danos un minuto” a un mensaje más directo: “Estamos enviando tu transferencia”, con la promesa de una notificación cuando esté lista.</li>
+    <li><strong>Feedback:</strong> pasó de un mensaje genérico a un resumen completo de la operación, con el comprobante a un toque.</li>
+    <li><strong>Notificaciones:</strong> definimos push y mail para éxito y para error, con el mismo criterio de claridad, y un recordatorio de seguridad al pie del mail.</li>
+  </ul>
+  <blockquote>Mostrar éxito antes de la confirmación final fue una decisión consciente: aceptamos un caso minoritario de error a cambio de eliminar la incertidumbre para la gran mayoría.</blockquote>
+
+  <h2>Resultados</h2>
+  <div class="facts">
+    <div><span>Tiempo mediano de feedback</span><strong>De casi 30 s a 6 s</strong></div>
+    <div><span>Espera en la pantalla de feedback</span><strong>De más de 1 min a 4–7 s</strong></div>
+    <div><span>Conversión en transferencias a otras entidades</span><strong>De ~60% a ~85%</strong></div>
+  </div>
+  <p>Para saber si lo lográbamos, definimos desde el inicio qué medir: tickets en atención al cliente, cantidad de errores, posibilidad de recuperarse del error y tiempo de demora.</p>
+  <p>Como próximo paso, actualizamos la UI con el nuevo Design System.</p>
+
+  <h2>Qué me llevo</h2>
+  <ul class="clean">
+    <li>A veces el problema no es la velocidad real, sino cuánto tarda el usuario en saber qué pasó.</li>
+    <li>Compararse con la competencia ayuda a fijar una meta concreta y medible.</li>
+    <li>Diseñar el caso de error con el mismo cuidado que el caso feliz es lo que hace sostenible una decisión como esta.</li>
+  </ul>
+
+  <p class="note">Por confidencialidad, se omitieron el nombre de la empresa, datos de usuarios, montos y capturas reales de pantalla.</p>
+</main>
+</body>
+</html>

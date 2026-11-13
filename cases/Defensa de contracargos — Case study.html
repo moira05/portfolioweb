@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Defensa de contracargos — Case study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Vollkorn:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EFECF8; --surface:#FFFFFF; --ink:#1C1B3F; --muted:#5E5C80; --line:#D9D4EE;
+  --blue:#5B45D6; --blue-soft:#E6E0FA; --pink:#A99BF0; --navy:#1B1B3A; --on-navy:#FFFFFF;
+  --bad:#B3402F; --bad-soft:#FBEAE6;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#14132E; --surface:#1E1D42; --ink:#EEEBFA; --muted:#A9A6CC; --line:#35336A;
+    --blue:#A99BFF; --blue-soft:#2A2760; --pink:#B7A9FF; --navy:#0F0E27; --on-navy:#FFFFFF;
+    --bad:#FF9D8C; --bad-soft:#3B2230;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14132E; --surface:#1E1D42; --ink:#EEEBFA; --muted:#A9A6CC; --line:#35336A;
+  --blue:#A99BFF; --blue-soft:#2A2760; --pink:#B7A9FF; --navy:#0F0E27; --on-navy:#FFFFFF;
+  --bad:#FF9D8C; --bad-soft:#3B2230;
+  color-scheme:dark;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Manrope",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+main{max-width:880px;margin:0 auto;padding:56px 24px 96px}
+h1{font-size:clamp(34px,6vw,56px);line-height:1.05;font-weight:600;letter-spacing:-.02em;margin:0 0 20px;max-width:16ch}
+h2{font-size:clamp(24px,3.6vw,32px);line-height:1.15;font-weight:600;letter-spacing:-.015em;margin:72px 0 16px}
+h1,h2{font-family:"Vollkorn",Georgia,"Times New Roman",serif}
+h3{font-size:18px;font-weight:600;margin:0 0 6px}
+p{margin:0 0 16px;max-width:66ch}
+.lede{font-size:clamp(18px,2.4vw,22px);color:var(--muted);max-width:56ch;margin-bottom:36px}
+.pill{display:inline-block;background:var(--surface);color:var(--ink);border:1px solid var(--line);font-size:13px;font-weight:600;padding:4px 14px;border-radius:999px;margin-bottom:24px}
+dl.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px 32px;margin:0;padding:24px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+dl.meta dt{font-size:14px;color:var(--muted);margin-bottom:2px}
+dl.meta dd{margin:0;font-weight:500}
+
+/* antes / después */
+.flow{display:grid;gap:16px;grid-template-columns:1fr;margin:28px 0 8px}
+@media(min-width:760px){.flow{grid-template-columns:1.15fr 1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px}
+.panel.after{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
+.panel h3{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.panel h3 span{font-size:14px;font-weight:500;color:var(--muted)}
+.chain{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:10px}
+.chain li{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:10px;background:var(--bad-soft);color:var(--ink);font-size:15.5px;line-height:1.4}
+.chain li b{flex:none;width:24px;height:24px;border-radius:50%;background:var(--bad);color:var(--bg);font-size:13px;display:grid;place-items:center}
+.one{margin-top:16px;display:grid;gap:10px}
+.one .step{padding:12px 14px;border-radius:10px;background:var(--blue-soft);font-size:15.5px;line-height:1.4}
+.one .drop{border:2px dashed var(--blue);border-radius:10px;padding:22px 14px;text-align:center;color:var(--blue);font-weight:600;font-size:15px}
+
+/* proceso */
+.steps{list-style:none;padding:0;margin:24px 0 0;display:grid;gap:0;border-left:2px solid var(--line)}
+.steps li{position:relative;padding:0 0 28px 28px}
+.steps li::before{content:"";position:absolute;left:-7px;top:7px;width:12px;height:12px;border-radius:50%;background:var(--blue)}
+.steps li:last-child{padding-bottom:0}
+.steps p{margin:0;color:var(--muted)}
+
+/* test */
+.facts{display:grid;gap:0;margin:20px 0;border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
+.facts div{display:flex;justify-content:space-between;gap:16px;padding:14px 18px;border-top:1px solid var(--line)}
+.facts div:first-child{border-top:0}
+.facts span{color:var(--muted)}
+.facts strong{font-weight:600;white-space:nowrap}
+blockquote{margin:20px 0;padding:4px 0 4px 20px;border-left:3px solid var(--pink);color:var(--muted);max-width:60ch}
+
+/* herramientas IA */
+.tools{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin-top:20px}
+.tool{border:1px solid var(--line);border-radius:14px;padding:18px;background:var(--surface)}
+.tool p{font-size:15px;color:var(--muted);margin:0}
+
+/* éxito */
+.goals{display:grid;gap:14px;margin-top:20px}
+.goal{display:grid;grid-template-columns:auto 1fr;gap:6px 20px;align-items:baseline;padding:18px 20px;border-radius:14px;background:var(--navy);color:var(--on-navy)}
+.goal .n{font-size:34px;font-weight:600;letter-spacing:-.02em}
+.goal p{margin:0;font-size:15.5px;opacity:.92}
+.goal h3{margin:0 0 2px}
+
+h1 em{font-style:italic;font-weight:500}
+h2{margin-bottom:22px}
+h2::after{content:"";display:block;width:150px;height:10px;margin-top:8px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='10' viewBox='0 0 150 10'%3E%3Cpath d='M2 6 Q 14 0 26 5 T 50 5 T 74 5 T 98 5 T 122 5 T 148 5' fill='none' stroke='%23A99BF0' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat}
+.panel,.tool,.facts,.scroll,.goal{border-radius:20px}
+.note{margin-top:72px;padding-top:20px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+ul.clean{margin:0 0 16px;padding-left:20px;max-width:64ch}
+ul.clean li{margin-bottom:6px}
+</style>
+</head>
+<body>
+<main>
+  <span class="pill">Case study</span>
+  <h1>Rediseño de la defensa de <em>contracargos</em></h1>
+  <p class="lede">Un proceso manual de tres pasos pasó a ser una carga de comprobante dentro de la propia plataforma, validada con merchants reales y con equipos de seis áreas.</p>
+
+  <dl class="meta">
+    <div><dt>Rol</dt><dd>Product Designer</dd></div>
+    <div><dt>Industria</dt><dd>E-commerce y pagos, LATAM</dd></div>
+    <div><dt>Período</dt><dd>Julio – septiembre 2025</dd></div>
+    <div><dt>Equipos</dt><dd>Diseño, Producto, Desarrollo, Riesgo, Operaciones, Marketing y Soporte</dd></div>
+    <div><dt>Alcance</dt><dd>Funcionalidad cross-país (Argentina, México y Brasil)</dd></div>
+  </dl>
+
+  <h2>Contexto</h2>
+  <p>Cuando un cliente desconoce una compra, el merchant tiene que defenderse presentando documentación. Hoy ese proceso es manual: depende de que el merchant adjunte los comprobantes y de que el equipo de riesgo los cargue en un backend externo.</p>
+  <p>Lo más llamativo: le pedíamos al merchant información que ya teníamos en nuestro administrador, como capturas de pantalla de la orden.</p>
+
+  <div class="flow">
+    <div class="panel">
+      <h3>Antes <span>3 pasos fuera de la plataforma</span></h3>
+      <ol class="chain">
+        <li><b>1</b>Completar un formulario externo</li>
+        <li><b>2</b>Sacar una captura de la venta desde el administrador de la tienda</li>
+        <li><b>3</b>Unir todo en un solo PDF con un peso específico</li>
+      </ol>
+    </div>
+    <div class="panel after">
+      <h3>Después <span>1 paso, dentro del flujo</span></h3>
+      <div class="one">
+        <div class="step">El aviso de contracargo muestra motivo y fecha límite</div>
+        <div class="drop">Cargar comprobante (PDF, JPG o PNG)</div>
+        <div class="step">Los datos de la venta ya los tiene la plataforma</div>
+      </div>
+    </div>
+  </div>
+
+  <p style="margin-top:20px">El problema pega más en los merchants grandes, que pueden enfrentar hasta 8 contracargos por semana. En las entrevistas lo señalaron como una de sus principales preocupaciones.</p>
+
+  <h2>Hipótesis</h2>
+  <p>Si mejoramos la carga de documentación, vamos a:</p>
+  <ul class="clean">
+    <li>reducir el tiempo de resolución de contracargos,</li>
+    <li>bajar la carga operativa del equipo de riesgo,</li>
+    <li>aumentar la tasa de defensa exitosa.</li>
+  </ul>
+
+  <h2>Proceso de diseño en equipo</h2>
+  <ol class="steps">
+    <li>
+      <h3>Wireframe</h3>
+      <p>Con Desarrollo y Producto validamos el alcance y las preguntas abiertas antes de diseñar en alta fidelidad.</p>
+    </li>
+    <li>
+      <h3>Design critique V1</h3>
+      <p>Al ser una funcionalidad cross-país, la validamos con los Product Designers de México y Brasil.</p>
+    </li>
+    <li>
+      <h3>Test de usabilidad no moderado</h3>
+      <p>Lo armamos en Maze y lo compartimos con merchants activos que ya habían tenido contracargos.</p>
+    </li>
+    <li>
+      <h3>Design critique V2</h3>
+      <p>Iteramos y debatimos la versión final con Diseño, Operaciones, Riesgo, Marketing, Soporte y Producto. Exploramos varias opciones de ubicación para la acción principal antes de decidir.</p>
+    </li>
+  </ol>
+
+  <h2>Lo que nos dijo el test</h2>
+  <p>El escenario: “Sos parte del equipo administrativo y estás gestionando tus cobros. Recibiste una alerta de contracargo y querés resolverlo cuanto antes. ¿Cómo lo harías?”. Después sumamos preguntas abiertas sobre qué información les hubiera dado más seguridad al cargar el comprobante.</p>
+  <div class="facts">
+    <div><span>Respuestas</span><strong>Casi 200</strong></div>
+    <div><span>Completaron la tarea correctamente</span><strong>Cerca de 4 de cada 10</strong></div>
+    <div><span>Duración promedio</span><strong>Menos de 1 minuto</strong></div>
+  </div>
+  <p>Con esa tasa de éxito, el test dejó claro que la acción principal no era lo bastante visible ni el paso a seguir lo bastante claro. Esa fue la base para rediseñar la pantalla y comparar opciones en la segunda ronda de critique.</p>
+
+  <h2>La versión final</h2>
+  <ul class="clean">
+    <li>El aviso de contracargo muestra el motivo y la fecha de vencimiento, con el botón para cargar el comprobante a la vista.</li>
+    <li>Los datos del cliente y de la venta aparecen en la misma pantalla, sin pedirlos de nuevo.</li>
+    <li>Se acepta PDF, JPG o PNG, así que ya no hay que armar un PDF único.</li>
+    <li>Las condiciones de carga (formatos y peso máximo) se explican antes de subir el archivo.</li>
+    <li>Un enlace a información sobre contracargos queda a mano para resolver dudas sin salir del flujo.</li>
+  </ul>
+
+  <h2>Cómo medimos el éxito</h2>
+  <p>La métrica principal es disminuir los contactos a soporte por contracargos.</p>
+  <div class="goals">
+    <div class="goal">
+      <span class="n">−30%</span>
+      <div><h3>Consultas por estado y contracargos pendientes</h3><p>Comparado con el mes anterior al lanzamiento. Si el flujo da más feedback en tiempo real, baja la incertidumbre sobre si el proceso avanza.</p></div>
+    </div>
+    <div class="goal">
+      <span class="n">−25%</span>
+      <div><h3>Consultas de información general</h3><p>En el primer mes posterior al lanzamiento. Indican que el merchant no entiende el proceso, y la propuesta debería resolverlo.</p></div>
+    </div>
+  </div>
+
+  <h2>Cómo usé IA en el proceso</h2>
+  <p>Armé asistentes propios para acompañar cada etapa y llegar a las reuniones con más claridad.</p>
+  <div class="tools">
+    <div class="tool"><h3>Product Coach</h3><p>Para arrancar: me ayudó a reflexionar sobre el brief antes de actuar.</p></div>
+    <div class="tool"><h3>Data Sensei</h3><p>Para conversar los resultados del test y transformarlos en hallazgos accionables.</p></div>
+    <div class="tool"><h3>UX Writing Assistant</h3><p>Para iterar el contenido de todas las pantallas.</p></div>
+    <div class="tool"><h3>Prototipado en baja</h3><p>Prototipos con Lovable o v0 para generar alineación temprana con el equipo y desarrollo.</p></div>
+  </div>
+
+  <h2>Qué me llevo</h2>
+  <ul class="clean">
+    <li>Antes de pedirle algo al usuario, conviene revisar si ya lo tenemos.</li>
+    <li>Testear con quienes ya vivieron el problema da evidencia que ninguna opinión interna reemplaza.</li>
+    <li>Involucrar a Riesgo, Operaciones y Soporte desde la crítica evita sorpresas después del lanzamiento.</li>
+  </ul>
+
+  <p class="note">Por confidencialidad, se omitieron nombres de la empresa y del producto, datos de clientes, montos y capturas reales de pantalla.</p>
+</main>
+</body>
+</html>

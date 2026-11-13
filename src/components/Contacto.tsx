@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import SectionTitle from "./SectionTitle";
 
 const EMAIL = "andreolimoira@gmail.com";
 
@@ -41,9 +42,7 @@ export default function Contacto() {
   return (
     <section className="bg-[#eeedf5] px-10 py-16">
       <div className="mx-auto max-w-screen-xl">
-        <h2 className="font-vollkorn text-[2rem] italic font-normal leading-tight text-black mb-4 md:text-[3rem]">
-          ¿Querés explorar algo?
-        </h2>
+        <SectionTitle>¿Querés explorar algo?</SectionTitle>
         <p className="font-manrope text-[1rem] font-normal leading-relaxed text-[#2d2d2d] max-w-[680px] mb-10 md:text-[1.25rem]">
           Me interesan los proyectos donde haya un problema real para resolver, especialmente aquellos con impacto social, donde la IA pueda ser parte de la solución. Si tenés una idea, un experimento o algo para probar, hablemos.
         </p>

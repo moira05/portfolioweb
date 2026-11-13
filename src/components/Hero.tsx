@@ -1,19 +1,28 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useRef } from "react";
 import ParticleBackground from "./ParticleBackground";
+import PixelIcons from "./PixelIcons";
+import styles from "./SectionTitle.module.css";
 
-const iconRows = [
-  [
-    { src: "/robot.svg", alt: "Robot AI" },
-    { src: "/nodos.svg", alt: "Nodos" },
-    { src: "/magic-bunny.svg", alt: "Magic bunny" },
-  ],
-  [
-    { src: "/star.svg", alt: "Star" },
-    { src: "/helado.svg", alt: "Helado" },
-    { src: "/goal.svg", alt: "Goal" },
-  ],
-];
+const OBSERVER_THRESHOLD = 0.4;
 
+// letter spans with global --i index for stagger delay
+function LetterGroup({ word, start, italic }: { word: string; start: number; italic?: boolean }) {
+  return (
+    <span className={`${styles.word}${italic ? " italic" : ""}`}>
+      {word.split("").map((ch, li) => (
+        <span
+          key={li}
+          className={styles.letter}
+          style={{ "--i": start + li } as React.CSSProperties}
+        >
+          {ch}
+        </span>
+      ))}
+    </span>
+  );
+}
 
 function SparkIcon() {
   return (
@@ -39,6 +48,31 @@ function SparkIcon() {
 }
 
 export default function Hero() {
+  const h1Ref = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) return;
+
+    const el = h1Ref.current;
+    if (!el) return;
+
+    el.classList.add(styles.mounted);
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.add(styles.revealed);
+          io.disconnect();
+        }
+      },
+      { threshold: OBSERVER_THRESHOLD },
+    );
+
+    const raf = requestAnimationFrame(() => io.observe(el));
+    return () => { cancelAnimationFrame(raf); io.disconnect(); };
+  }, []);
+
   return (
     <section id="sobre-mi" className="relative overflow-hidden bg-[#eeedf5] px-10 py-16">
       <ParticleBackground />
@@ -54,14 +88,24 @@ export default function Hero() {
           </div>
 
           {/* Main heading */}
-          <div>
-            <h1 className="font-vollkorn text-[4rem] font-normal leading-[0.85] tracking-tight text-black -ml-[3px] md:text-[6.5rem]">
-              Diseño
-              <br />
-              con{" "}
-              <em className="italic">propósito.</em>
-            </h1>
-          </div>
+          <h1
+            ref={h1Ref}
+            aria-label="Diseño con propósito."
+            className="font-vollkorn text-[4rem] font-normal leading-[0.85] tracking-tight text-black -ml-[3px] md:text-[6.5rem]"
+          >
+            <span aria-hidden="true">
+              {/* Line 1 */}
+              <span className="block">
+                <LetterGroup word="Diseño" start={0} />
+              </span>
+              {/* Line 2 */}
+              <span className="block">
+                <LetterGroup word="con" start={6} />
+                {" "}
+                <LetterGroup word="propósito." start={10} italic />
+              </span>
+            </span>
+          </h1>
 
           {/* Description */}
           <div className="flex items-start gap-4">
@@ -74,20 +118,8 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Icon grid 3×2 */}
-        <div className="grid grid-cols-3 gap-8">
-          {iconRows.flat().map((icon) => (
-            <div key={icon.alt} className="size-[65px] overflow-hidden">
-              <Image
-                src={icon.src}
-                alt={icon.alt}
-                width={65}
-                height={65}
-                className="size-full object-contain"
-              />
-            </div>
-          ))}
-        </div>
+        {/* Pixel icons grid */}
+        <PixelIcons />
       </div>
     </section>
   );
