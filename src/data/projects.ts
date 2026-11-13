@@ -22,7 +22,7 @@ export const PROJECTS: Project[] = [
   // ── Fila 1: grandes ──────────────────────────────────────────────────────────
   {
     slug: "contracargos",
-    category: "Fintech · Pagos",
+    category: "Tiendanube",
     title: "Contracargos",
     descriptor: "defensa en un paso",
     cover: {
@@ -39,7 +39,7 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "onboarding",
-    category: "ERP · B2B",
+    category: "ITTI - BIMS",
     title: "Onboarding",
     descriptor: "alta de empresa",
     cover: {
@@ -58,7 +58,7 @@ export const PROJECTS: Project[] = [
   // ── Fila 2: medianas ─────────────────────────────────────────────────────────
   {
     slug: "transferencias",
-    category: "Fintech · Pagos",
+    category: "Ualá",
     title: "Transferencias",
     descriptor: "feedback inmediato",
     cover: {
