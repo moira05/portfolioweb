@@ -16,7 +16,7 @@ const onboarding: CaseStudy = {
   sections: [
     {
       heading: "Entrevistas",
-      headingAccent: "exploratorias",
+      headingAccent: "exploratorias.",
       eyebrow: "Discovery",
       blocks: [
         {
@@ -38,7 +38,7 @@ const onboarding: CaseStudy = {
     },
     {
       heading: "Onboarding con foco en",
-      headingAccent: "la autogestión",
+      headingAccent: "la autogestión.",
       eyebrow: "Brief",
       blocks: [
         {
@@ -61,7 +61,7 @@ const onboarding: CaseStudy = {
     },
     {
       heading: "Qué se testeó y",
-      headingAccent: "qué encontramos",
+      headingAccent: "qué encontramos.",
       eyebrow: "Test de usabilidad",
       blocks: [
         {
@@ -84,7 +84,7 @@ const onboarding: CaseStudy = {
     },
     {
       heading: "Iteramos según resultados del",
-      headingAccent: "test de usabilidad",
+      headingAccent: "test de usabilidad.",
       eyebrow: "Ideation",
       blocks: [
         {
@@ -114,7 +114,7 @@ const onboarding: CaseStudy = {
     },
     {
       heading: "Principios para un onboarding que se pueda",
-      headingAccent: "autogestionar",
+      headingAccent: "autogestionar.",
       eyebrow: "Decisiones de diseño",
       blocks: [
         {
@@ -127,16 +127,12 @@ const onboarding: CaseStudy = {
             { title: "Checklist, no wizard", text: "El usuario empieza por lo que le resulta familiar, sin un orden forzado." },
             { title: "Mínimo viable de configuración", text: "Solo lo que habilita la primera operación de valor." },
           ],
-          imageSrc: "/onboarding/landing-largo.webp",
-          imageAlt: "Landing de BIMS con las cuatro señales de que tu empresa necesita BIMS",
-          imageWidth: 1025,
-          imageHeight: 1054,
         },
       ],
     },
     {
       heading: "Del primer clic al",
-      headingAccent: "primer día de uso",
+      headingAccent: "primer día de uso.",
       eyebrow: "El flujo",
       blocks: [
         {
@@ -157,7 +153,7 @@ const onboarding: CaseStudy = {
     },
     {
       heading: "Criterio de",
-      headingAccent: "éxito",
+      headingAccent: "éxito.",
       eyebrow: "Criterio de éxito",
       blocks: [
         {

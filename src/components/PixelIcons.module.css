@@ -1,0 +1,137 @@
+/* ── Grid ───────────────────────────────────────────────────────────────── */
+.icons {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 40px 44px;
+  justify-content: center;
+}
+
+/* ── Float wrapper ──────────────────────────────────────────────────────── */
+.float {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+}
+
+.float.live {
+  animation: float var(--dur, 4s) ease-in-out var(--delay, 0s) infinite alternate;
+}
+
+@keyframes float {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-8px); }
+}
+
+/* ── Button ─────────────────────────────────────────────────────────────── */
+.icon {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  display: block;
+  line-height: 0;
+  border-radius: 12px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.icon canvas {
+  display: block;
+  image-rendering: pixelated;
+}
+
+.icon:focus-visible {
+  outline: 3px solid #6f5fd6;
+  outline-offset: 6px;
+}
+
+/* ── Hop (hover / focus squash-stretch) ─────────────────────────────────── */
+.hop {
+  /* used as a toggle class — rules only matter inside .icon.hop */
+}
+
+.icon.hop {
+  animation: hop 0.62s cubic-bezier(.3,.7,.4,1);
+}
+
+@keyframes hop {
+  0%   { transform: translateY(0)     scale(1,1); }
+  20%  { transform: translateY(0)     scale(1.1,.86); }
+  50%  { transform: translateY(-24px) scale(.94,1.08); }
+  78%  { transform: translateY(0)     scale(1.07,.92); }
+  100% { transform: translateY(0)     scale(1,1); }
+}
+
+/* ── Bubble tooltip ─────────────────────────────────────────────────────── */
+.bubble {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  width: max-content;
+  max-width: 190px;
+  padding: 8px 14px;
+  text-align: center;
+  background: #fff;
+  color: #05003c;
+  border: 2px solid #14142b;
+  border-radius: 14px;
+  box-shadow: 3px 3px 0 #14142b;
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.35;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 5;
+  transform: translateX(calc(-50% + var(--shift, 0px))) translateY(6px) scale(.9);
+  transform-origin: 50% 100%;
+  transition: opacity .16s ease, transform .24s cubic-bezier(.2,1.5,.4,1);
+}
+
+/* toggled with classList.add(styles.show) */
+.show {}
+
+.bubble.show {
+  opacity: 1;
+  transform: translateX(calc(-50% + var(--shift, 0px))) translateY(0) scale(1);
+}
+
+/* pixel-style caret */
+.bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -7px;
+  left: calc(50% - var(--shift, 0px));
+  width: 10px;
+  height: 10px;
+  background: #fff;
+  border-right: 2px solid #14142b;
+  border-bottom: 2px solid #14142b;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+/* ── Hearts canvas (fixed overlay) ──────────────────────────────────────── */
+.hearts {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 50;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .icons { gap: 28px 24px; }
+}
+
+/* ── Reduced motion ─────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .float.live { animation: none; }
+  .icon.hop   { animation: none; }
+  .bubble {
+    transition: opacity .1s ease;
+    transform: translateX(calc(-50% + var(--shift, 0px)));
+  }
+}

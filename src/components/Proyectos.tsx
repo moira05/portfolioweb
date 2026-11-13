@@ -8,10 +8,10 @@ import styles from "./Proyectos.module.css";
 const RIBBON_TAGS = [
   "Fintech",
   "ERP · B2B",
-  "Food tech",
+  "Educación",
   "Diseño web con IA",
   "Producto · UX",
-  "Pagos",
+  "Payment",
 ];
 
 const row1 = PROJECTS.slice(0, 2);
@@ -65,7 +65,8 @@ export default function Proyectos() {
       </div>
 
       {/* Content */}
-      <div className="mx-auto max-w-[1180px] px-8 pt-24 pb-[120px]">
+      <div className="px-10">
+      <div className="mx-auto max-w-screen-xl pt-24 pb-[120px]">
         {/* Header */}
         <div className="mb-10 flex items-end justify-between gap-4">
           <h2 className="font-manrope text-[clamp(32px,5.6vw,70px)] font-bold leading-[1.02] tracking-[-0.03em] text-[#14142b]">
@@ -76,38 +77,41 @@ export default function Proyectos() {
           </span>
         </div>
 
-        {/* Grid */}
-        <div ref={gridRef} className={styles.grid}>
-          {row1.map((project, i) => (
-            <div
-              key={project.slug}
-              data-card
-              className={styles.bigCard}
-              style={{
-                opacity: 0,
-                transform: "translateY(16px)",
-                transition: `opacity 0.5s ease ${i * 70}ms, transform 0.5s ease ${i * 70}ms`,
-              }}
-            >
-              <ProjectCard project={project} large />
-            </div>
-          ))}
+        {/* Two sub-grids so the small-card row is always 3 columns */}
+        <div ref={gridRef}>
+          <div className={styles.bigGrid}>
+            {row1.map((project, i) => (
+              <div
+                key={project.slug}
+                data-card
+                style={{
+                  opacity: 0,
+                  transform: "translateY(16px)",
+                  transition: `opacity 0.5s ease ${i * 70}ms, transform 0.5s ease ${i * 70}ms`,
+                }}
+              >
+                <ProjectCard project={project} large />
+              </div>
+            ))}
+          </div>
 
-          {row2.map((project, i) => (
-            <div
-              key={project.slug}
-              data-card
-              className={styles.smallCard}
-              style={{
-                opacity: 0,
-                transform: "translateY(16px)",
-                transition: `opacity 0.5s ease ${(i + 2) * 70}ms, transform 0.5s ease ${(i + 2) * 70}ms`,
-              }}
-            >
-              <ProjectCard project={project} />
-            </div>
-          ))}
+          <div className={styles.smallGrid}>
+            {row2.map((project, i) => (
+              <div
+                key={project.slug}
+                data-card
+                style={{
+                  opacity: 0,
+                  transform: "translateY(16px)",
+                  transition: `opacity 0.5s ease ${(i + 2) * 70}ms, transform 0.5s ease ${(i + 2) * 70}ms`,
+                }}
+              >
+                <ProjectCard project={project} />
+              </div>
+            ))}
+          </div>
         </div>
+      </div>
       </div>
     </section>
   );

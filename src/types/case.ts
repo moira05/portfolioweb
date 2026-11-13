@@ -104,7 +104,7 @@ export type Block =
   | { type: "brief-context"; contextParagraph: string; numbersBullets: string[]; tension: string; hypothesisIntro: string; hypothesisBullets: string[] }
   | { type: "usability-test"; descriptionParagraphs: string[]; participants: TestParticipant[]; results: TestResult[] }
   | { type: "versions"; versions: VersionItem[] }
-  | { type: "design-principles"; lead: string; rule: string; principles: PrincipleItem[]; imageSrc: string; imageAlt: string; imageWidth: number; imageHeight: number }
+  | { type: "design-principles"; lead: string; rule: string; principles: PrincipleItem[]; imageSrc?: string; imageAlt?: string; imageWidth?: number; imageHeight?: number }
   | { type: "carousel"; slides: CarouselSlide[] }
   | { type: "metrics-grid"; main: { label: string; title: string; goals: MetricGoal[] }; metrics: MetricCard[]; measure: { title: string; text: string } };
 

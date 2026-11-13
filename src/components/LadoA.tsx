@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import DrawUnderline from "./DrawUnderline";
+import SectionTitle from "./SectionTitle";
 
 const LADO_A = [
   {
@@ -81,13 +81,8 @@ export default function LadoA() {
     <section id="lado-a" className="bg-[#eeedf5] px-10 py-16">
       <div className="mx-auto max-w-screen-xl">
         {/* Header */}
-        <div className="mb-10 flex items-start justify-between">
-          <div className="flex flex-col gap-1 w-fit">
-            <h2 className="font-manrope text-[2rem] font-semibold tracking-[0.4px] text-black md:text-[3rem]">
-              {flipped ? "Mi lado B" : "Mi lado A"}
-            </h2>
-            <DrawUnderline />
-          </div>
+        <div className="flex items-start justify-between">
+          <SectionTitle>{flipped ? "Mi lado B" : "Mi lado A"}</SectionTitle>
           <button
             onClick={() => setFlipped((f) => !f)}
             className="font-manrope text-[1.5rem] font-normal text-black underline decoration-solid hover:opacity-60 transition-opacity cursor-pointer"

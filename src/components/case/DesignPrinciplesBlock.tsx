@@ -4,7 +4,7 @@ type Props = Extract<Block, { type: "design-principles" }>;
 
 export default function DesignPrinciplesBlock({ lead, rule, principles, imageSrc, imageAlt, imageWidth, imageHeight }: Props) {
   return (
-    <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-2">
+    <div className={`grid grid-cols-1 items-start gap-8 ${imageSrc ? "md:grid-cols-2" : ""}`}>
       <div>
         <p className="font-manrope text-[1rem] leading-relaxed text-[#2d2d2d]">{lead}</p>
         <p className="mt-5 font-manrope text-[1.05rem] font-semibold leading-snug text-[#171717]">{rule}</p>
@@ -18,20 +18,22 @@ export default function DesignPrinciplesBlock({ lead, rule, principles, imageSrc
         </div>
       </div>
 
-      <div
-        className="overflow-hidden rounded-2xl"
-        style={{ boxShadow: "0 20px 50px rgba(20,20,43,0.18)" }}
-      >
-        <img
-          src={imageSrc}
-          alt={imageAlt}
-          width={imageWidth}
-          height={imageHeight}
-          loading="lazy"
-          className="w-full"
-          style={{ height: "auto" }}
-        />
-      </div>
+      {imageSrc && (
+        <div
+          className="overflow-hidden rounded-2xl"
+          style={{ boxShadow: "0 20px 50px rgba(20,20,43,0.18)" }}
+        >
+          <img
+            src={imageSrc}
+            alt={imageAlt}
+            width={imageWidth}
+            height={imageHeight}
+            loading="lazy"
+            className="w-full"
+            style={{ height: "auto" }}
+          />
+        </div>
+      )}
     </div>
   );
 }

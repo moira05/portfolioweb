@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import DrawUnderline from "./DrawUnderline";
 
 // ─── Grid constants ───────────────────────────────────────────────────────────
 const P  = 5; // px per grid cell
@@ -512,12 +511,9 @@ export default function MiProceso() {
           {/* Left column — 40%: título + descripción + tabs */}
           <div className="flex flex-col gap-6 md:w-[40%] md:shrink-0">
 
-            <div className="flex flex-col gap-1 w-fit">
-              <h2 className="font-manrope text-[2rem] font-semibold tracking-[0.4px] text-black md:text-[3rem]">
-                Mi proceso
-              </h2>
-              <DrawUnderline />
-            </div>
+            <h2 className="font-manrope text-[clamp(32px,5.6vw,70px)] font-bold leading-[1.02] tracking-[-0.03em] text-[#14142b]">
+              Mi proceso
+            </h2>
 
             <p
               aria-live="polite"
@@ -543,7 +539,7 @@ export default function MiProceso() {
                 <span className={`font-manrope text-[0.6rem] font-semibold tracking-widest uppercase transition-colors duration-150 ${
                   uiStage === 0 ? "text-[#171717]" : "text-[#888]"
                 }`}>
-                  Febrero 26
+                  Enero 2026
                 </span>
                 <div
                   className="absolute bottom-0 left-0 right-0 h-[3px] rounded-full bg-[#b0aaf2] origin-left"
@@ -566,7 +562,7 @@ export default function MiProceso() {
                 <span className={`font-manrope text-[0.6rem] font-semibold tracking-widest uppercase transition-colors duration-150 ${
                   uiStage === 1 ? "text-[#171717]" : "text-[#888]"
                 }`}>
-                  Septiembre 26
+                  Noviembre 2026
                 </span>
                 <div
                   className="absolute bottom-0 left-0 right-0 h-[3px] rounded-full bg-[#b0aaf2] origin-left"
