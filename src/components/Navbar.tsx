@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 const navLinks = [
   { label: "Proyectos",    href: "#proyectos",                         arrowRotation: "rotate-90",           external: false, sectionId: "proyectos" },
-  { label: "Sobre mi",     href: "#lado-a",                            arrowRotation: "rotate-90",           external: false, sectionId: "lado-a"    },
+  { label: "Sobre mi",     href: "/sobre-mi",                          arrowRotation: "rotate-90",           external: false, sectionId: null        },
   { label: "Pensamientos", href: "https://medium.com/@moirixand",      arrowRotation: "-rotate-[54.78deg]",  external: true,  sectionId: null        },
   { label: "Contacto",     href: "#contacto",                          arrowRotation: "rotate-90",           external: false, sectionId: "contacto"  },
 ];
@@ -18,7 +19,7 @@ function ArrowIcon({ className }: { className?: string }) {
   );
 }
 
-export default function Navbar() {
+function NavbarContent() {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -38,7 +39,6 @@ export default function Navbar() {
     return () => observers.forEach((o) => o.disconnect());
   }, []);
 
-  // Lock body scroll when menu is open
   useEffect(() => {
     if (menuOpen) {
       document.body.style.overflow = "hidden";
@@ -54,6 +54,9 @@ export default function Navbar() {
     e.preventDefault();
     document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
+
+  // suppress unused warning — activeSection reserved for future active-link styling
+  void activeSection;
 
   return (
     <>
@@ -143,4 +146,10 @@ export default function Navbar() {
       </div>
     </>
   );
+}
+
+export default function Navbar() {
+  const pathname = usePathname();
+  if (pathname.startsWith("/proyectos/")) return null;
+  return <NavbarContent />;
 }

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vista previa: carrusel de onboarding</title>
+<style>
+  body { margin: 0; padding: 48px 32px; background: #fff; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; }
+  .wrap { max-width: 1200px; margin: 0 auto; }
+  h1 { font-size: 32px; margin: 0 0 8px; color: #1b1a1f; }
+  p.lead { margin: 0 0 32px; color: #6b6872; font-size: 18px; }
+  .root { --oc-ink:#1b1a1f; --oc-muted:#6b6872; --oc-line:#d9d5de; --oc-accent:#1a6fe8; --oc-surface:#f6f4f1; --slide-h:440px; color: var(--oc-ink); }
+  .track { display:flex; gap:32px; overflow-x:auto; scroll-snap-type:x mandatory; padding:8px 4px 20px; scrollbar-width:thin; }
+  .track:focus-visible { outline:2px solid var(--oc-accent); outline-offset:4px; border-radius:12px; }
+  .slide { flex:none; width:max(240px, calc(var(--slide-h) * var(--ratio))); margin:0; scroll-snap-align:start; display:flex; flex-direction:column; gap:14px; }
+  .frame { width:100%; height:var(--slide-h); border:1px solid var(--oc-line); border-radius:14px; overflow:hidden; background:var(--oc-surface); }
+  .frame img { display:block; width:100%; height:100%; object-fit:cover; object-position:top left; }
+  .caption { display:flex; gap:12px; align-items:flex-start; }
+  .num { flex:none; width:28px; height:28px; border-radius:50%; background:var(--oc-ink); color:#fff; font-size:14px; line-height:28px; text-align:center; font-weight:600; }
+  .ct { display:flex; flex-direction:column; gap:2px; font-size:15px; line-height:22px; color:var(--oc-muted); }
+  .ct strong { color:var(--oc-ink); font-weight:600; font-size:16px; }
+  .controls { display:flex; justify-content:space-between; align-items:center; padding:0 4px; gap:16px; }
+  .dots { display:flex; gap:8px; }
+  .dot { width:8px; height:8px; padding:0; border:0; border-radius:50%; background:var(--oc-line); cursor:pointer; transition:width .2s ease, background .2s ease; }
+  .dot.on { background:var(--oc-ink); width:24px; border-radius:4px; }
+  .buttons { display:flex; align-items:center; gap:10px; }
+  .counter { font-size:14px; color:var(--oc-muted); margin-right:6px; font-variant-numeric:tabular-nums; }
+  .arrow { width:44px; height:44px; border-radius:50%; border:1px solid var(--oc-line); background:#fff; color:var(--oc-ink); font-size:18px; cursor:pointer; }
+  .arrow:hover:not(:disabled) { border-color:var(--oc-ink); }
+  .arrow:focus-visible { outline:2px solid var(--oc-accent); outline-offset:2px; }
+  .arrow:disabled { opacity:.35; cursor:default; }
+  @media (max-width:900px) { .root { --slide-h:340px; } }
+  @media (max-width:640px) { .root { --slide-h:260px; } .track { gap:20px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Onboarding</h1>
+  <p class="lead">Del primer clic al primer día de uso.</p>
+  <section class="root" id="oc" aria-roledescription="carrusel" aria-label="Flujo de onboarding">
+    <div class="track" id="track" tabindex="0"></div>
+    <div class="controls">
+      <div class="dots" id="dots" aria-hidden="true"></div>
+      <div class="buttons">
+        <span class="counter" id="counter" aria-live="polite"></span>
+        <button class="arrow" id="prev" aria-label="Pantalla anterior">←</button>
+        <button class="arrow" id="next" aria-label="Pantalla siguiente">→</button>
+      </div>
+    </div>
+  </section>
+</div>
+<script>
+const SLIDES = [
+  ["landing", 1025, 577, "Landing", "Entrada al flujo: la promesa y el botón para empezar gratis."],
+  ["registro", 1600, 1226, "Registro", "Crear la cuenta y probar 30 días gratis."],
+  ["verificar-correo", 1600, 900, "Verificar correo", "Pantalla de espera con reenvío y opción de corregir el correo."],
+  ["email-bienvenida", 651, 1146, "Email de bienvenida", "Un solo llamado a la acción y qué se puede hacer con la cuenta activa."],
+  ["paso-1", 1600, 900, "Paso 1 de 3", "Cómo administra hoy su empresa, para personalizar el plan."],
+  ["paso-2", 1600, 900, "Paso 2 de 3", "Validación de la empresa con el RUC, con ayuda para encontrarlo."],
+  ["paso-3", 1366, 839, "Paso 3 de 3", "Rubro, módulos de interés y facturación electrónica."],
+  ["plan", 1366, 989, "Plan elegido", "Qué incluye el plan y aviso de que no hay cargos durante la prueba."],
+  ["inicio", 1600, 900, "Inicio", "Lista de configuraciones pendientes para empezar a vender."]
+];
+const track = document.getElementById('track'), dots = document.getElementById('dots');
+const counter = document.getElementById('counter'), prev = document.getElementById('prev'), next = document.getElementById('next');
+let index = 0, pending = null, pendingTimer = 0;
+SLIDES.forEach(([f, w, h, t, d], i) => {
+  const fig = document.createElement('figure');
+  fig.className = 'slide'; fig.style.setProperty('--ratio', w / h);
+  fig.setAttribute('aria-label', (i + 1) + ' de ' + SLIDES.length);
+  fig.innerHTML = '<div class="frame"><img src="public/onboarding/' + f + '.webp" alt="' + t + '" width="' + w + '" height="' + h + '"></div>' +
+    '<figcaption class="caption"><span class="num">' + (i + 1) + '</span><span class="ct"><strong>' + t + '</strong><span>' + d + '</span></span></figcaption>';
+  track.appendChild(fig);
+  const b = document.createElement('button'); b.className = 'dot'; b.tabIndex = -1; b.onclick = () => goTo(i); dots.appendChild(b);
+});
+function goTo(i) {
+  const slides = [...track.children]; const clamped = Math.max(0, Math.min(i, slides.length - 1)); const t = slides[clamped];
+  pending = clamped; clearTimeout(pendingTimer); pendingTimer = setTimeout(() => { pending = null; }, 700);
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  track.scrollTo({ left: t.offsetLeft - track.offsetLeft, behavior: reduce ? 'auto' : 'smooth' });
+}
+function update() {
+  const slides = [...track.children]; const left = track.scrollLeft + track.offsetLeft;
+  let min = Infinity; slides.forEach((s, i) => { const d = Math.abs(s.offsetLeft - left); if (d < min) { min = d; index = i; } });
+  [...dots.children].forEach((d, i) => d.classList.toggle('on', i === index));
+  counter.textContent = (index + 1) + ' / ' + SLIDES.length;
+  prev.disabled = index === 0; next.disabled = index === SLIDES.length - 1;
+}
+let raf = 0; track.addEventListener('scroll', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(update); }, { passive: true });
+const cur = () => (pending ?? index);
+prev.onclick = () => goTo(cur() - 1); next.onclick = () => goTo(cur() + 1);
+track.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') { e.preventDefault(); goTo(cur() + 1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(cur() - 1); }
+});
+update();
+</script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+.root {
+  position: relative;
+  height: 100%;
+  background: linear-gradient(135deg, #e9edff, #dfe5ff);
+}
+
+/* Stat block */
+.stat {
+  position: absolute;
+  left: 8%;
+  top: 12%;
+  bottom: 0;
+  width: 50%;
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.statRow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  font-family: var(--font-vollkorn, Georgia, serif);
+  font-weight: 500;
+  font-size: clamp(24px, 2.6vw, 34px);
+  line-height: 1;
+}
+
+.old {
+  position: relative;
+  color: #3a3862;
+}
+.old::after {
+  content: '';
+  position: absolute;
+  left: -2%;
+  top: 55%;
+  height: 5px;
+  width: 0;
+  background: #a99cf0;
+  border-radius: 3px;
+  transition: width 0.6s ease 0.2s;
+}
+
+.newLine {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.arrow {
+  font-family: var(--font-manrope, sans-serif);
+  font-size: 0.8em;
+  color: #a99cf0;
+  opacity: 0;
+  transition: opacity 0.4s ease 0.7s;
+}
+
+.newVal {
+  font-weight: 700;
+  font-size: clamp(36px, 4vw, 54px);
+  color: #14142b;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.5s ease 0.9s, transform 0.5s ease 0.9s;
+}
+
+/* activated state */
+.statIn .old::after { width: 104%; }
+.statIn .arrow { opacity: 1; }
+.statIn .newVal { opacity: 1; transform: none; }
+
+/* Phone frame */
+.phone {
+  position: absolute;
+  box-sizing: content-box;
+  aspect-ratio: 358 / 638;
+  width: 32%;
+  right: 8%;
+  top: 12%;
+  border: 6px solid #14142b;
+  border-bottom: 0;
+  border-radius: 26px 26px 0 0;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 30px 60px -20px rgba(25, 30, 90, 0.45);
+}
+
+.phoneInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Animated check SVG */
+.check {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.ring {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.tick {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.checkPlay .tick {
+  stroke-dasharray: 1;
+  animation: draw 0.5s ease-out 0.15s both;
+}
+
+.checkPlay .ring {
+  animation: ringBurst 1s ease-out 0.55s both;
+}
+
+@keyframes draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes ringBurst {
+  0% { opacity: 0.75; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.6); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .old::after { width: 104%; transition: none; }
+  .arrow { opacity: 1; transition: none; }
+  .newVal { opacity: 1; transform: none; transition: none; }
+  .checkPlay .tick { animation: none; }
+  .checkPlay .ring { animation: none; }
+}
