@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import SectionTitle from "./SectionTitle";
+import Container from "./Container";
 
 const EMAIL = "andreolimoira@gmail.com";
 
@@ -40,8 +41,8 @@ export default function Contacto() {
   };
 
   return (
-    <section className="bg-[#eeedf5] px-10 py-16">
-      <div className="mx-auto max-w-screen-xl">
+    <section className="bg-[#F3F2F5] py-16">
+      <Container>
         <SectionTitle>¿Querés explorar algo?</SectionTitle>
         <p className="font-manrope text-[1rem] font-normal leading-relaxed text-[#2d2d2d] max-w-[680px] mb-10 md:text-[1.25rem]">
           Me interesan los proyectos donde haya un problema real para resolver, especialmente aquellos con impacto social, donde la IA pueda ser parte de la solución. Si tenés una idea, un experimento o algo para probar, hablemos.
@@ -78,7 +79,7 @@ export default function Contacto() {
             </span>
           </button>
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

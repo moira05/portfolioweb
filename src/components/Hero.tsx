@@ -3,14 +3,15 @@
 import { useEffect, useRef } from "react";
 import ParticleBackground from "./ParticleBackground";
 import PixelIcons from "./PixelIcons";
+import Container from "./Container";
 import styles from "./SectionTitle.module.css";
 
 const OBSERVER_THRESHOLD = 0.4;
 
 // letter spans with global --i index for stagger delay
-function LetterGroup({ word, start, italic }: { word: string; start: number; italic?: boolean }) {
+function LetterGroup({ word, start, italic, color }: { word: string; start: number; italic?: boolean; color?: string }) {
   return (
-    <span className={`${styles.word}${italic ? " italic" : ""}`}>
+    <span className={`${styles.word}${italic ? " italic" : ""}`} style={color ? { color } : undefined}>
       {word.split("").map((ch, li) => (
         <span
           key={li}
@@ -74,14 +75,15 @@ export default function Hero() {
   }, []);
 
   return (
-    <section id="sobre-mi" className="relative overflow-hidden bg-[#eeedf5] px-10 py-16">
+    <section id="sobre-mi" className="relative overflow-hidden bg-white pb-16 pt-[104px] md:pt-[125px]">
       <ParticleBackground />
-      <div className="relative z-10 mx-auto flex max-w-screen-xl flex-col-reverse gap-10 md:grid md:grid-cols-[1fr_auto] md:items-center md:gap-16">
+      <Container className="relative z-10">
+      <div className="flex flex-col-reverse gap-10 md:grid md:grid-cols-[1fr_auto] md:items-center md:gap-16">
         {/* Text content */}
         <div className="flex flex-col gap-10 min-w-0">
           {/* Subtitle */}
           <div className="flex items-center gap-4">
-            <p className="font-manrope text-[1rem] font-normal text-black md:text-[1.3rem]">
+            <p className="font-manrope text-[1.2rem] font-normal text-black md:text-[1.56rem]">
               Hola! <span className="animate-wave">👋</span> Soy Moira, Product{" "}
               <span className="font-vollkorn">Designer</span>
             </p>
@@ -102,7 +104,7 @@ export default function Hero() {
               <span className="block">
                 <LetterGroup word="con" start={6} />
                 {" "}
-                <LetterGroup word="propósito." start={10} italic />
+                <LetterGroup word="propósito." start={10} italic color="#7246D8" />
               </span>
             </span>
           </h1>
@@ -121,6 +123,7 @@ export default function Hero() {
         {/* Pixel icons grid */}
         <PixelIcons />
       </div>
+      </Container>
     </section>
   );
 }

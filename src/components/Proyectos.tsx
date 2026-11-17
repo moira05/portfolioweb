@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import ProjectCard from "./ProjectCard";
 import { PROJECTS } from "@/data/projects";
+import Container from "./Container";
 import styles from "./Proyectos.module.css";
 
 const RIBBON_TAGS = [
@@ -46,7 +47,7 @@ export default function Proyectos() {
   }, []);
 
   return (
-    <section id="proyectos" className="bg-[#eeedf5] pt-14 overflow-hidden">
+    <section id="proyectos" className="bg-white pt-14 overflow-hidden">
       {/* Ribbon */}
       <div
         aria-hidden="true"
@@ -65,8 +66,7 @@ export default function Proyectos() {
       </div>
 
       {/* Content */}
-      <div className="px-10">
-      <div className="mx-auto max-w-screen-xl pt-24 pb-[120px]">
+      <Container className="pt-24 pb-[120px]">
         {/* Header */}
         <div className="mb-10 flex items-end justify-between gap-4">
           <h2 className="font-manrope text-[clamp(32px,5.6vw,70px)] font-bold leading-[1.02] tracking-[-0.03em] text-[#14142b]">
@@ -111,8 +111,7 @@ export default function Proyectos() {
             ))}
           </div>
         </div>
-      </div>
-      </div>
+      </Container>
     </section>
   );
 }

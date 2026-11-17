@@ -1,144 +1,263 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
+import Logo from "./Logo";
 
-const navLinks = [
-  { label: "Proyectos",    href: "/#proyectos",                        arrowRotation: "rotate-90",           external: false, sectionId: "proyectos" },
-  { label: "Sobre mi",     href: "/sobre-mi",                          arrowRotation: "rotate-90",           external: false, sectionId: null        },
-  { label: "Pensamientos", href: "https://medium.com/@moirixand",      arrowRotation: "-rotate-[54.78deg]",  external: true,  sectionId: null        },
+interface NavLink {
+  label: string;
+  href: string;
+  sectionId: string | null;
+  external: boolean;
+}
+
+const NAV_LINKS: NavLink[] = [
+  { label: "Proyectos",    href: "/#proyectos",                   sectionId: "proyectos", external: false },
+  { label: "Sobre mí",     href: "/sobre-mi",                     sectionId: null,        external: false },
+  { label: "AI",           href: "/ai",                           sectionId: null,        external: false },
+  { label: "Pensamientos", href: "https://medium.com/@moirixand", sectionId: null,        external: true  },
 ];
 
-function ArrowIcon({ className }: { className?: string }) {
+function ExternalArrow() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
-      <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z" />
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+      <path d="M1.5 8.5L8.5 1.5M8.5 1.5H3.5M8.5 1.5V6.5"
+        stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
 
-function NavbarContent() {
-  const [activeSection, setActiveSection] = useState<string | null>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
+function NavbarInner() {
+  const pathname = usePathname();
+  const [scrolled,       setScrolled]       = useState(false);
+  const [activeSection,  setActiveSection]  = useState<string | null>(null);
+  const [menuOpen,       setMenuOpen]        = useState(false);
 
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const toggleRef  = useRef<HTMLButtonElement>(null);
+
+  /* ── Scroll detection ─────────────────────────────────────────────────── */
   useEffect(() => {
-    const sectionIds = navLinks.map((l) => l.sectionId).filter(Boolean) as string[];
-    const observers: IntersectionObserver[] = [];
-    sectionIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      const observer = new IntersectionObserver(
-        ([entry]) => { if (entry.isIntersecting) setActiveSection(id); },
-        { rootMargin: "-40% 0px -50% 0px", threshold: 0 }
-      );
-      observer.observe(el);
-      observers.push(observer);
-    });
-    return () => observers.forEach((o) => o.disconnect());
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  /* ── IntersectionObserver for active section ──────────────────────────── */
   useEffect(() => {
-    if (menuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    const ids = NAV_LINKS.map(l => l.sectionId).filter(Boolean) as string[];
+    const observers: IntersectionObserver[] = [];
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) setActiveSection(id); },
+        { rootMargin: "-40% 0px -55% 0px", threshold: 0 },
+      );
+      obs.observe(el);
+      observers.push(obs);
+    });
+    return () => observers.forEach(o => o.disconnect());
+  }, []);
+
+  /* ── Block body scroll when overlay open ─────────────────────────────── */
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen]);
 
-  const handleClick = (sectionId: string | null) => (e: React.MouseEvent<HTMLAnchorElement>) => {
-    setMenuOpen(false);
-    if (!sectionId) return;
-    const el = document.getElementById(sectionId);
+  /* ── inert on overlay (hides from AT and prevents tab when closed) ────── */
+  useEffect(() => {
+    const el = overlayRef.current;
     if (!el) return;
-    e.preventDefault();
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (menuOpen) {
+      el.removeAttribute("inert");
+    } else {
+      el.setAttribute("inert", "");
+    }
+  }, [menuOpen]);
+
+  /* ── Focus first link when overlay opens ─────────────────────────────── */
+  useEffect(() => {
+    if (!menuOpen) return;
+    const t = setTimeout(() => {
+      overlayRef.current?.querySelector<HTMLAnchorElement>("a")?.focus();
+    }, 60);
+    return () => clearTimeout(t);
+  }, [menuOpen]);
+
+  /* ── Close on resize to desktop ──────────────────────────────────────── */
+  useEffect(() => {
+    const onResize = () => { if (window.innerWidth >= 760) setMenuOpen(false); };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  /* ── Focus trap + Escape (overlay) ───────────────────────────────────── */
+  const handleOverlayKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape") {
+      setMenuOpen(false);
+      setTimeout(() => toggleRef.current?.focus(), 0);
+      return;
+    }
+    if (e.key !== "Tab") return;
+    const focusable = Array.from(
+      overlayRef.current?.querySelectorAll<HTMLElement>("a[href]") ?? [],
+    );
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last  = focusable[focusable.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+    } else {
+      if (document.activeElement === last)  { e.preventDefault(); first.focus(); }
+    }
   };
 
-  // suppress unused warning — activeSection reserved for future active-link styling
-  void activeSection;
+  /* ── Active link ──────────────────────────────────────────────────────── */
+  const isActive = (link: NavLink) => {
+    if (link.external) return false;
+    if (link.sectionId !== null) return activeSection === link.sectionId;
+    return pathname === link.href;
+  };
+
+  /* ── Smooth scroll for same-page anchors (desktop + overlay) ─────────── */
+  const makeClickHandler = (link: NavLink, fromOverlay = false) =>
+    (e: React.MouseEvent<HTMLAnchorElement>) => {
+      if (fromOverlay) {
+        setMenuOpen(false);
+        setTimeout(() => toggleRef.current?.focus(), 0);
+      }
+      if (!link.sectionId) return;
+      const el = document.getElementById(link.sectionId);
+      if (!el) return; // different page – let Next.js navigate
+      e.preventDefault();
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      el.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+    };
+
+  const pillStyle: React.CSSProperties = {
+    pointerEvents: "auto",
+    borderRadius: 999,
+    border: "1px solid var(--line)",
+    background: scrolled ? "rgba(255,255,255,.82)" : "rgba(238,237,245,.72)",
+    backdropFilter: "saturate(1.4) blur(14px)",
+    WebkitBackdropFilter: "saturate(1.4) blur(14px)",
+    boxShadow: scrolled ? "0 12px 30px -14px rgba(20,20,43,.25)" : "none",
+    transition: "background 0.3s ease, box-shadow 0.3s ease",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+  };
 
   return (
     <>
-      <nav className="w-full border-b border-[#4b5563]/20 bg-white relative z-50">
-        <div className="mx-auto flex h-[77px] max-w-screen-xl items-center justify-between px-6 md:px-10">
-          {/* Logo */}
-          <Link href="/">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logomoi.svg" alt="Logo" className="h-10" />
-          </Link>
-
-          {/* Desktop nav links */}
-          <ul className="hidden md:flex items-center gap-[68px]">
-            {navLinks.map(({ label, href, arrowRotation, external, sectionId }) => (
-              <li key={label}>
-                <Link
-                  href={href}
-                  {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                  onClick={handleClick(sectionId)}
-                  className="group flex items-center gap-1 font-manrope text-[18px] leading-none font-normal text-[#131313] transition-all hover:opacity-60"
-                >
-                  {label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-
-          {/* Hamburger button */}
-          <button
-            className="md:hidden flex flex-col justify-center gap-[5px] p-2 cursor-pointer z-[60]"
-            onClick={() => setMenuOpen((o) => !o)}
-            aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
-          >
-            <span className={`block h-[2px] w-6 bg-[#131313] transition-all duration-300 origin-center ${menuOpen ? "translate-y-[7px] rotate-45" : ""}`} />
-            <span className={`block h-[2px] w-6 bg-[#131313] transition-all duration-300 ${menuOpen ? "opacity-0 scale-x-0" : ""}`} />
-            <span className={`block h-[2px] w-6 bg-[#131313] transition-all duration-300 origin-center ${menuOpen ? "-translate-y-[7px] -rotate-45" : ""}`} />
-          </button>
-        </div>
-      </nav>
-
-      {/* Fullscreen mobile menu */}
+      {/* ── Fixed pill wrapper ───────────────────────────────────────────── */}
       <div
-        className={`md:hidden fixed inset-0 z-40 bg-[#eeedf5] flex flex-col transition-all duration-400 ease-in-out ${
-          menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        }`}
-        style={{ transitionDuration: "350ms" }}
+        style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, pointerEvents: "none" }}
+        className="navbar-top-pad"
       >
-        {/* Close button top-right */}
-        <div className="flex justify-end px-6 pt-6 pb-4">
-          <button
-            onClick={() => setMenuOpen(false)}
-            aria-label="Cerrar menú"
-            className="flex items-center justify-center w-10 h-10 cursor-pointer"
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M18 6L6 18M6 6l12 12" stroke="#131313" strokeWidth="2" strokeLinecap="round" />
-            </svg>
-          </button>
-        </div>
+        <div className="container-layout">
+          <nav aria-label="Principal" className="navbar-pill" style={pillStyle}>
 
-        {/* Links — vertically centered */}
-        <div className="flex flex-1 flex-col justify-center px-10">
-          {navLinks.map(({ label, href, arrowRotation, external, sectionId }, idx) => (
-            <div key={label}>
+            <Logo />
+
+            {/* Desktop links */}
+            <ul className="nav-desktop" style={{ listStyle: "none", alignItems: "center", gap: 4 }}>
+              {NAV_LINKS.map(link => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    onClick={makeClickHandler(link)}
+                    {...(link.external
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : {})}
+                    {...(link.label === "Pensamientos"
+                      ? { "aria-label": "Pensamientos (abre Medium en una pestaña nueva)" }
+                      : {})}
+                    aria-current={isActive(link) ? "page" : undefined}
+                    className="nav-link"
+                  >
+                    {link.label}
+                    {link.external && <ExternalArrow />}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            {/* Mobile hamburger */}
+            <button
+              ref={toggleRef}
+              className="nav-mobile hamburger-btn"
+              style={{
+                width: 44, height: 44,
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 5,
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                padding: 0,
+                borderRadius: 999,
+              }}
+              aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
+              aria-expanded={menuOpen}
+              aria-controls="navbar-overlay"
+              onClick={() => setMenuOpen(o => !o)}
+            >
+              <span
+                className="hamburger-line"
+                style={{ transform: menuOpen ? "translateY(3.5px) rotate(45deg)" : "none" }}
+              />
+              <span
+                className="hamburger-line"
+                style={{ transform: menuOpen ? "translateY(-3.5px) rotate(-45deg)" : "none" }}
+              />
+            </button>
+
+          </nav>
+        </div>
+      </div>
+
+      {/* ── Mobile full-screen overlay ───────────────────────────────────── */}
+      <div
+        id="navbar-overlay"
+        ref={overlayRef}
+        onKeyDown={handleOverlayKeyDown}
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 48,
+          background: "var(--bg)",
+          paddingTop: 104,
+          visibility: menuOpen ? "visible" : "hidden",
+          opacity: menuOpen ? 1 : 0,
+          transition: "opacity 0.3s ease, visibility 0.3s ease",
+          overflowY: "auto",
+        }}
+      >
+        <div className="container-layout">
+          {NAV_LINKS.map(link => (
+            <div key={link.label} style={{ borderBottom: "1px solid var(--line)" }}>
               <Link
-                href={href}
-                {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                onClick={handleClick(sectionId)}
-                className="group flex items-center justify-between py-6 font-manrope text-[2rem] font-normal text-[#131313] transition-opacity hover:opacity-50"
-                style={{
-                  opacity: menuOpen ? 1 : 0,
-                  transform: menuOpen ? "translateY(0)" : "translateY(-12px)",
-                  transition: `opacity 350ms ease, transform 350ms ease`,
-                  transitionDelay: menuOpen ? `${idx * 80 + 100}ms` : "0ms",
-                }}
+                href={link.href}
+                onClick={makeClickHandler(link, true)}
+                {...(link.external
+                  ? { target: "_blank", rel: "noopener noreferrer" }
+                  : {})}
+                {...(link.label === "Pensamientos"
+                  ? { "aria-label": "Pensamientos (abre Medium en una pestaña nueva)" }
+                  : {})}
+                aria-current={isActive(link) ? "page" : undefined}
+                className="nav-overlay-link"
               >
-                {label}
+                {link.label}
+                {link.external && (
+                  <span style={{ marginLeft: 8, fontWeight: 400, fontSize: "0.65em", verticalAlign: "middle" }}>↗</span>
+                )}
               </Link>
-              {idx < navLinks.length - 1 && (
-                <div className="h-px bg-[#4b5563]/20" />
-              )}
             </div>
           ))}
         </div>
@@ -150,5 +269,5 @@ function NavbarContent() {
 export default function Navbar() {
   const pathname = usePathname();
   if (pathname.startsWith("/proyectos/")) return null;
-  return <NavbarContent />;
+  return <NavbarInner />;
 }

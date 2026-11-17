@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import SectionTitle from "./SectionTitle";
+import Container from "./Container";
 
 // ─── Grid constants ───────────────────────────────────────────────────────────
 const P  = 5; // px per grid cell
@@ -504,16 +506,14 @@ export default function MiProceso() {
   };
 
   return (
-    <section className="bg-white px-6 py-14 md:px-10 md:py-20">
-      <div className="mx-auto max-w-screen-xl">
+    <section className="bg-white pb-14 md:pb-20 pt-[104px] md:pt-[125px]">
+      <Container>
         <div className="flex flex-col gap-8 md:flex-row md:items-start md:gap-12">
 
           {/* Left column — 40%: título + descripción + tabs */}
-          <div className="flex flex-col gap-6 md:w-[40%] md:shrink-0">
+          <div className="flex flex-col md:w-[40%] md:shrink-0">
 
-            <h2 className="font-manrope text-[clamp(32px,5.6vw,70px)] font-bold leading-[1.02] tracking-[-0.03em] text-[#14142b]">
-              Mi proceso
-            </h2>
+            <SectionTitle>Cambios en mi proceso</SectionTitle>
 
             <p
               aria-live="polite"
@@ -525,7 +525,7 @@ export default function MiProceso() {
             </p>
 
             {/* Stage buttons */}
-            <div className="flex items-center gap-6">
+            <div className="mt-6 flex items-center gap-6">
               <button
                 aria-pressed={uiStage === 0}
                 onClick={() => handleClick(0)}
@@ -587,7 +587,7 @@ export default function MiProceso() {
           </div>
 
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

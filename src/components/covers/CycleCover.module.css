@@ -1,13 +1,13 @@
 .phoneBg {
   position: relative;
   height: 100%;
-  background: linear-gradient(135deg, #e9edff, #dfe5ff);
+  background: #B3A3D9;
 }
 
 .browserBg {
   position: relative;
   height: 100%;
-  background: linear-gradient(135deg, #dfe4fb, #c9d2f7);
+  background: #B3A3D9;
   display: grid;
   place-items: end center;
 }

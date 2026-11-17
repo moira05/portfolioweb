@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import SectionTitle from "./SectionTitle";
+import Container from "./Container";
 
 const videos = [
   "/videos/video1.mp4",
@@ -34,15 +35,15 @@ function VideoCard({ src }: { src: string }) {
 
 export default function Playground() {
   return (
-    <section className="bg-[#eeedf5] px-10 py-16">
-      <div className="mx-auto max-w-screen-xl">
+    <section className="bg-[#F3F2F5] py-16">
+      <Container>
         <SectionTitle>Playground</SectionTitle>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {videos.map((src) => (
             <VideoCard key={src} src={src} />
           ))}
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

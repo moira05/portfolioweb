@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cómo uso AI · versión 2 (scroll)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#eeedf5; --white:#fff; --ink:#14142b; --muted:#5f5c85; --line:#dcdae8; --violet:#a99cf0; --vs:#6f5fd6; --vsoft:#ebe8fb; --navy:#191a2e;
+          --sans:'Manrope','Helvetica Neue',Arial,sans-serif; --serif:'Newsreader',Georgia,serif; --mono:'JetBrains Mono',ui-monospace,Menlo,monospace; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 18px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+  .intro { padding: 112px 0 64px; }
+  .eyebrow { font-size: 19px; color: var(--muted); font-weight: 500; }
+  h2 { font-size: clamp(42px, 7.4vw, 92px); line-height: 1.02; font-weight: 800; letter-spacing: -.035em; margin-top: 18px; max-width: 16ch; text-wrap: balance; }
+  h2 .accent { font-family: var(--serif); font-weight: 600; letter-spacing: -.02em; color: var(--vs); }
+  .lead { font-size: clamp(19px, 2vw, 24px); color: var(--muted); max-width: 52ch; margin-top: 32px; }
+  .lead b { color: var(--ink); font-weight: 600; } .lead .hl { color: var(--vs); font-weight: 600; }
+
+  /* Recorrido: alto = 6 pantallas; el escenario queda fijo */
+  .track { position: relative; height: calc(100vh * 4.2); }
+  .pin { position: sticky; top: 0; height: 100vh; min-height: 560px; max-width: 1180px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: .9fr 1.1fr; gap: 64px; align-items: center; }
+
+  .left, .term { min-width: 0; }
+  .nav { list-style: none; position: relative; display: grid; gap: 4px; margin-bottom: 36px; }
+  .nav::before { content: ''; position: absolute; left: 15px; top: 16px; bottom: 16px; width: 2px; background: var(--line); }
+  .nav .fill { position: absolute; left: 15px; top: 16px; width: 2px; background: var(--vs); height: 0; transition: height .4s ease; }
+  .nav button { appearance: none; background: none; border: 0; font: inherit; cursor: pointer; position: relative; display: flex; align-items: center; gap: 16px; padding: 4px 0; color: var(--muted); font-weight: 600; font-size: 17px; text-align: left; transition: color .25s; }
+  .nav .n { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--bg); border: 2px solid var(--line); font-size: 13px; font-weight: 700; flex: none; transition: all .25s; }
+  .nav button:hover { color: var(--ink); }
+  .nav button.done .n { border-color: var(--vs); color: var(--vs); }
+  .nav button[aria-current="step"] { color: var(--ink); font-weight: 800; }
+  .nav button[aria-current="step"] .n { background: var(--vs); border-color: var(--vs); color: #fff; transform: scale(1.1); }
+  .nav button:focus-visible { outline: 3px solid var(--vs); outline-offset: 4px; border-radius: 10px; }
+
+  .info { transition: opacity .3s ease, transform .3s ease; }
+  .info.swap { opacity: 0; transform: translateY(8px); }
+  h3 { font-size: clamp(28px, 3.2vw, 42px); line-height: 1.1; font-weight: 800; letter-spacing: -.03em; }
+  .desc { color: var(--muted); font-size: 17px; line-height: 1.6; margin-top: 14px; max-width: 46ch; }
+
+  /* Terminal */
+  .term { background: var(--navy); color: #e8e6ff; border-radius: 20px; box-shadow: 0 30px 70px -30px rgba(20,20,43,.55); overflow: hidden; font-family: var(--mono); }
+  .term-bar { display: flex; align-items: center; gap: 8px; padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,.08); font-size: 13px; color: #8f8cc2; }
+  .term-bar i { width: 11px; height: 11px; border-radius: 50%; background: rgba(255,255,255,.14); }
+  .term-bar span { margin-left: 10px; }
+  .term-body { padding: 24px 24px 20px; min-height: 250px; font-size: 15.5px; line-height: 1.65; }
+  .ln { opacity: 0; transform: translateY(6px); transition: opacity .35s ease, transform .35s ease; margin-top: 14px; }
+  .ln.in { opacity: 1; transform: none; }
+  .ln:first-child { margin-top: 0; }
+  .pr { color: var(--violet); font-weight: 700; margin-right: 10px; }
+  .prompt-txt { color: #fff; }
+  .cursor { display: inline-block; width: 9px; height: 1.1em; background: var(--violet); vertical-align: text-bottom; margin-left: 2px; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .out { color: #b9b6e6; }
+  .tag { display: inline-flex; align-items: center; gap: 8px; margin: 4px 10px 0 0; padding: 2px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,.16); font-size: 13.5px; color: #e8e6ff; }
+  .tag::before { content: '✓'; color: #7be0a3; }
+  .tag:has(.d)::before { content: none; } .tag .d { width: 9px; height: 9px; border-radius: 50%; }
+  .dec { color: #fff; } .dec .pr { color: #7be0a3; }
+  .dec b { color: #7be0a3; font-weight: 700; }
+
+  .split { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid rgba(255,255,255,.08); font-family: var(--sans); }
+  .split > div { padding: 18px 24px 22px; }
+  .split > div + div { border-left: 1px solid rgba(255,255,255,.08); background: rgba(169,156,240,.08); }
+  .split h4 { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: #8f8cc2; margin-bottom: 8px; }
+  .split > div + div h4 { color: var(--violet); }
+  .split ul { list-style: none; display: grid; gap: 5px; font-size: 14.5px; line-height: 1.4; color: #d6d3f5; }
+  .split li::before { content: '–'; margin-right: 8px; color: #6e6aa3; }
+  .split > div + div li::before { content: '→'; color: var(--violet); }
+
+  .hint { position: absolute; bottom: 28px; left: 0; font-size: 14px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+
+  @media (max-width: 900px) {
+    .wrap { padding: 0 20px; } .intro { padding: 80px 0 40px; }
+    .track { height: calc(100vh * 4); }
+    .pin { grid-template-columns: 1fr; gap: 16px; align-content: center; padding: 16px 20px; }
+    .nav { display: flex; gap: 6px; margin-bottom: 14px; justify-content: space-between; }
+    .nav::before, .nav .fill { display: none; }
+    .nav button .l { display: none; }
+    .info h3 { font-size: 26px; } .desc { font-size: 15px; margin-top: 8px; }
+    .term-body { min-height: 190px; padding: 18px; font-size: 14px; }
+    .split { grid-template-columns: 1fr; } .split > div + div { border-left: 0; border-top: 1px solid rgba(255,255,255,.08); }
+    .split > div { padding: 12px 18px; } .split ul { font-size: 13.5px; }
+    .hint { display: none; }
+  }
+  @media (max-height: 700px) and (min-width: 901px) { .term-body { min-height: 200px; } .nav { margin-bottom: 20px; } .desc { margin-top: 8px; } }
+  @media (prefers-reduced-motion: reduce) { .cursor { animation: none; } .ln, .info, .nav .fill { transition: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="intro">
+    <p class="eyebrow">Mi proceso</p>
+    <h2>Cómo uso AI, <span class="accent">y dónde no.</span></h2>
+    <p class="lead">La AI está <b>integrada en mi flujo de diseño</b>, pero no reemplaza el criterio. Es un <span class="hl">acelerador</span> que me deja dedicar más tiempo a <b>estrategia, usuarios y trabajo con otros equipos</b>.</p>
+  </header>
+</div>
+
+<div class="track" id="track">
+  <div class="pin">
+    <div class="left">
+      <ol class="nav" id="nav" aria-label="Etapas"><span class="fill" id="fill"></span></ol>
+      <div class="info" id="info" aria-live="polite">
+        <h3 id="title"></h3>
+        <p class="desc" id="desc"></p>
+      </div>
+    </div>
+    <div class="term" aria-label="Ejemplo de prompt">
+      <div class="term-bar"><i></i><i></i><i></i><span id="tlabel">claude</span></div>
+      <div class="term-body" id="body"></div>
+      <div class="split">
+        <div><h4>La AI</h4><ul id="ai"></ul></div>
+        <div><h4>Yo decido</h4><ul id="me"></ul></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div style="height:30vh"></div>
+
+<script>
+/* Los prompts son ejemplos de cómo lo planteo: reemplazalos por los tuyos reales. */
+const STEPS = [
+  { tab: 'Discovery', title: 'Entender antes de diseñar.',
+    desc: 'Arranco con el problema, no con pantallas. Uso la AI para ordenar el material y detectar huecos; las preguntas que importan se las hago a las personas que conocen el negocio.',
+    prompt: 'contrastá este PRD con la pantalla actual y marcá dudas, inconsistencias y fuera de alcance',
+    reply: ['Dudas marcadas', 'Alcance acotado', 'Preguntas para producto'],
+    ai: ['Ordena el PRD y las capturas', 'Marca inconsistencias y huecos'],
+    me: ['Qué entra y qué no', 'Qué le pregunto a producto'] },
+  { tab: 'Exploración', title: 'Explorar antes de elegir.',
+    desc: 'Pido opciones comparables en vez de una sola respuesta. Casi nunca me quedo con la primera salida: la critico, la itero y decido con mi criterio de producto.',
+    prompt: 'dame 2 variantes de esta pantalla: una que solo mejore la edición y otra más sintética',
+    reply: ['A: mejora la edición', 'B: más sintética'],
+    ai: ['Genera variantes comparables'],
+    me: ['Elijo una y descarto el resto', 'Decido por criterio, no por velocidad'] },
+  { tab: 'Prototipado', title: 'Prototipar fiel a producción.',
+    desc: 'Armo el prototipo en HTML con un kit hecho desde capturas reales. Lo llevo a Claude Code y después a Figma para pulir y pasar a desarrollo.',
+    prompt: 'armá la pantalla de alta con los componentes del kit, respetando las convenciones de producción',
+    reply: ['Proto en HTML', 'Fiel a producción', 'Listo para Figma'],
+    ai: ['Arma pantallas con el kit', 'Itera rápido los cambios'],
+    me: ['Que respete las convenciones reales', 'El pulido final en Figma'] },
+  { tab: 'UX writing', title: 'Los textos, con guía.',
+    desc: 'Claude no sigue bien las guías de estilo por sí solo, así que armé una skill con las reglas de la voz y la uso con iteración. Para revisar contenido me rinde mejor otra herramienta.',
+    prompt: 'reescribí este mensaje con la guía de contenido, sin tono de contrato',
+    reply: ['Copy consistente', 'Voz de la marca'],
+    ai: ['Borradores con la guía de estilo'],
+    me: ['Reviso que la cumpla', 'La voz es mía y de la marca'] },
+  { tab: 'Crítica', title: 'Feedback con prioridades.',
+    desc: 'Le pido feedback de UX sobre flujos y pantallas con una skill que lo ordena por prioridad. Es una segunda mirada, no un veredicto.',
+    prompt: 'dame feedback de este flujo, ordenado por prioridad',
+    reply: [['Crítico', '#d64545'], ['Importante', '#e0a526'], ['Opcional', '#3e9b62']],
+    ai: ['Una segunda mirada con prioridades'],
+    me: ['Qué hago con cada punto', 'No lo tomo como veredicto'] },
+  { tab: 'Lo que no delego', title: 'Donde la decisión es mía.',
+    desc: 'Las decisiones de UI las toma diseño, no el PRD. Las reglas de negocio las valido con producto, soporte y administración. Y cuido que usar mucho la AI no vuelva genéricas mis propuestas.',
+    prompt: 'esto no se lo pido a la AI', no: true, label: 'Cómo lo hago',
+    aiText: 'Entendido. Esto lo decidís vos.',
+    reply: ['Criterio propio', 'Evidencia antes de escalar'],
+    ai: ['Me da velocidad, no criterio'],
+    me: ['Las decisiones de UI', 'Las reglas de negocio, validadas con quien las conoce', 'Que mis propuestas no se vuelvan genéricas'] }
+];
+
+</script>
+<script>
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = id => document.getElementById(id), track = $('track'), nav = $('nav'), body = $('body');
+const N = STEPS.length; let cur = -1, timers = [], typer = null;
+
+STEPS.forEach((s, i) => {
+  const li = document.createElement('li'), b = document.createElement('button'); b.type = 'button';
+  b.innerHTML = '<span class="n">' + (i + 1) + '</span><span class="l">' + s.tab + '</span>';
+  b.setAttribute('aria-label', (i + 1) + '. ' + s.tab);
+  b.addEventListener('click', () => goTo(i));
+  li.appendChild(b); nav.appendChild(li);
+});
+const btns = [...nav.querySelectorAll('button')];
+
+function span() { const r = track.getBoundingClientRect(); return { top: scrollY + r.top, len: track.offsetHeight - innerHeight }; }
+function goTo(i) { const { top, len } = span(); scrollTo({ top: top + len * ((i + .5) / N), behavior: reduce ? 'auto' : 'smooth' }); }
+function indexNow() { const { top, len } = span(); const p = Math.min(.9999, Math.max(0, (scrollY - top) / len)); return Math.floor(p * N); }
+
+const later = (fn, ms) => { if (reduce) fn(); else timers.push(setTimeout(fn, ms)); };
+const line = cls => { const d = document.createElement('div'); d.className = 'ln ' + cls; body.appendChild(d); requestAnimationFrame(() => requestAnimationFrame(() => d.classList.add('in'))); return d; };
+const list = (ul, items) => { ul.innerHTML = ''; items.forEach(t => { const e = document.createElement('li'); e.textContent = t; ul.appendChild(e); }); };
+
+function render(i) {
+  timers.forEach(clearTimeout); timers = []; clearInterval(typer);
+  const s = STEPS[i], first = cur === -1; cur = i;
+  btns.forEach((b, k) => { b.classList.toggle('done', k < i); k === i ? b.setAttribute('aria-current', 'step') : b.removeAttribute('aria-current'); });
+  $('fill').style.height = (i / (N - 1)) * (nav.offsetHeight - 32) + 'px';
+
+  const info = $('info'); info.classList.add('swap');
+  setTimeout(() => { $('title').textContent = s.title; $('desc').textContent = s.desc; list($('ai'), s.ai); list($('me'), s.me); info.classList.remove('swap'); }, first || reduce ? 0 : 160);
+  $('tlabel').textContent = s.no ? 'sin AI' : 'claude';
+  body.innerHTML = '';
+
+  const l1 = line('p'); l1.innerHTML = '<span class="pr">' + (s.no ? '#' : '>') + '</span><span class="prompt-txt"></span>';
+  const t = l1.querySelector('.prompt-txt'), c = document.createElement('span'); c.className = 'cursor';
+  const text = s.no ? 'esto no se lo pido a la AI' : s.prompt;
+  const done = () => {
+    c.remove();
+    later(() => {
+      const o = line('out');
+      if (s.aiText) o.textContent = s.aiText;
+      else s.reply.forEach(r => { const g = document.createElement('span'); g.className = 'tag'; if (Array.isArray(r)) g.innerHTML = '<span class="d" style="background:' + r[1] + '"></span>' + r[0]; else g.textContent = r; o.appendChild(g); });
+      later(() => { const d = line('dec'); d.innerHTML = '<span class="pr">✓</span><b>yo decido:</b> '; d.append(s.me[0]); }, 800);
+    }, 450);
+  };
+  if (reduce) { t.textContent = text; done(); return; }
+  let k = 0; t.after(c);
+  typer = setInterval(() => { t.textContent = text.slice(0, ++k); if (k >= text.length) { clearInterval(typer); done(); } }, 24);
+}
+
+let raf = 0;
+function onScroll() { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { const i = indexNow(); if (i !== cur) render(i); }); }
+addEventListener('scroll', onScroll, { passive: true });
+addEventListener('resize', onScroll);
+render(0);
+</script>
+</body>
+</html>

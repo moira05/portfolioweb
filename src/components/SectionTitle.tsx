@@ -10,9 +10,10 @@ interface Props {
   children: string;
   eyebrow?: string;
   accent?: string;
+  accentColor?: string;
 }
 
-export default function SectionTitle({ children, eyebrow, accent }: Props) {
+export default function SectionTitle({ children, eyebrow, accent, accentColor }: Props) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
 
@@ -87,7 +88,7 @@ export default function SectionTitle({ children, eyebrow, accent }: Props) {
             letterIndex += word.length;
             return (
               <Fragment key={`a${wi}`}>
-                <span className={`${styles.word} font-vollkorn font-medium italic text-[#8a7de0]`}>
+                <span className={`${styles.word} font-vollkorn font-medium italic`} style={accentColor ? { color: accentColor } : { color: "#8a7de0" }}>
                   {word.split("").map((ch, li) => (
                     <span
                       key={li}

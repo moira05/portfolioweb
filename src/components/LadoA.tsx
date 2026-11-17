@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import SectionTitle from "./SectionTitle";
+import Container from "./Container";
 
 const LADO_A = [
   {
@@ -78,8 +79,8 @@ export default function LadoA() {
   const [flipped, setFlipped] = useState(false);
 
   return (
-    <section id="lado-a" className="bg-[#eeedf5] px-10 py-16">
-      <div className="mx-auto max-w-screen-xl">
+    <section id="lado-a" className="bg-white pb-16 pt-[104px] md:pt-[125px]">
+      <Container>
         {/* Header */}
         <div className="flex items-start justify-between">
           <SectionTitle>{flipped ? "Mi lado B" : "Mi lado A"}</SectionTitle>
@@ -99,22 +100,20 @@ export default function LadoA() {
               <div
                 key={`${a.titleSans}-${i}`}
                 style={{ perspective: "1000px" }}
-                className="md:h-[420px]"
               >
+                {/* Grid-stack flipper: both faces sit in cell 1/1; height = taller face */}
                 <div
                   style={{
                     transformStyle: "preserve-3d",
                     transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
                     transition: `transform 0.6s ease ${i * 0.1}s`,
-                    position: "relative",
-                    width: "100%",
+                    display: "grid",
                   }}
-                  className="h-auto md:h-full"
                 >
                   {/* Front — Lado A */}
                   <div
-                    style={{ backfaceVisibility: "hidden" }}
-                    className={`relative flex-col gap-3 rounded-[29px] bg-white px-8 py-8 md:absolute md:inset-0 md:flex md:px-10 md:py-10 ${flipped ? "hidden" : "flex"}`}
+                    style={{ backfaceVisibility: "hidden", gridArea: "1 / 1" }}
+                    className={`flex-col gap-3 rounded-[29px] border border-[#DBDDE0] bg-white px-8 py-8 md:flex md:px-10 md:py-10 ${flipped ? "hidden" : "flex"}`}
                   >
                     <Image
                       src={a.icon}
@@ -138,11 +137,8 @@ export default function LadoA() {
 
                   {/* Back — Lado B */}
                   <div
-                    style={{
-                      backfaceVisibility: "hidden",
-                      transform: "rotateY(180deg)",
-                    }}
-                    className={`relative flex-col gap-3 rounded-[29px] bg-white px-8 py-8 md:absolute md:inset-0 md:flex md:px-10 md:py-10 ${flipped ? "flex" : "hidden"}`}
+                    style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)", gridArea: "1 / 1" }}
+                    className={`flex-col gap-3 rounded-[29px] border border-[#DBDDE0] bg-white px-8 py-8 md:flex md:px-10 md:py-10 ${flipped ? "flex" : "hidden"}`}
                   >
                     <Image
                       src={b.icon}
@@ -167,7 +163,7 @@ export default function LadoA() {
             );
           })}
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

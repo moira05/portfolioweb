@@ -9,25 +9,6 @@ import KycImgCover from "./covers/KycImgCover";
 import MetricCover from "./covers/MetricCover";
 import type { Project } from "@/data/projects";
 
-function WavyUnderline() {
-  return (
-    <svg
-      viewBox="0 0 200 8"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="w-full max-w-[200px]"
-      aria-hidden="true"
-    >
-      <path
-        d="M2 4 C 20 1, 38 7, 56 4 S 92 1, 110 4 S 146 7, 164 4 S 190 1, 198 4"
-        stroke="#b0aaf2"
-        strokeWidth="2"
-        strokeLinecap="round"
-        fill="none"
-      />
-    </svg>
-  );
-}
 
 function Cover({
   project,
@@ -112,7 +93,7 @@ export default function ProjectCard({ project, large = false }: Props) {
   const content = (
     <div
       className={[
-        "relative flex h-full flex-col overflow-hidden rounded-[28px] bg-white",
+        "relative flex h-full flex-col overflow-hidden rounded-[28px] bg-white border border-[#DBDDE0]",
         "transition-[transform,box-shadow] duration-[250ms] ease-out",
         isHovered
           ? "-translate-y-1 shadow-[0_24px_50px_-20px_rgba(20,20,43,0.28)]"
@@ -128,22 +109,17 @@ export default function ProjectCard({ project, large = false }: Props) {
       )}
 
       <div className="flex flex-1 flex-col gap-[6px] px-8 py-7">
-        <span className="font-manrope text-[14px] font-medium uppercase tracking-[0.08em] text-[#a99cf0]">
+        <span className="font-manrope text-[14px] font-medium uppercase tracking-[0.08em] text-[#7247D8]">
           {category}
         </span>
 
         <div className="flex flex-col gap-0.5">
           <h3 className="font-manrope text-[clamp(20px,2.3vw,28px)] font-bold leading-[1.2] tracking-[-0.01em] text-[#14142b]">
             {title}{" "}
-            <em className="font-vollkorn font-medium not-italic italic text-[#a99cf0]">
+            <em className="font-vollkorn font-medium not-italic italic text-[#7247D8]">
               {descriptor}
             </em>
           </h3>
-          {isPublished && (
-            <div className="overflow-hidden transition-[max-height,opacity] duration-300 max-h-0 opacity-0 group-hover:max-h-[20px] group-hover:opacity-100">
-              <WavyUnderline />
-            </div>
-          )}
         </div>
 
         <p className="mt-1 font-manrope text-[15px] leading-[1.5] text-[#5f5c85]">
