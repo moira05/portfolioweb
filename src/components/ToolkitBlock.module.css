@@ -19,7 +19,6 @@
   border-radius: 28%;
   background: #fff;
   border: 1px solid var(--line);
-  box-shadow: 0 8px 20px -12px rgba(20, 20, 43, 0.25);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -28,8 +27,7 @@
   padding: 6px 3px 8px;
   cursor: default;
   outline-offset: 4px;
-  transition: transform 0.35s cubic-bezier(0.3, 1.5, 0.5, 1),
-              box-shadow 0.35s ease;
+  transition: transform 0.35s cubic-bezier(0.3, 1.5, 0.5, 1);
   opacity: 0;
   transform: translateY(12px);
 }
@@ -42,13 +40,11 @@
 .tile:nth-child(even):hover,
 .tile:nth-child(even):focus-within {
   transform: translateY(-4px) rotate(3deg);
-  box-shadow: 0 12px 24px -8px rgba(114, 70, 216, 0.45);
 }
 
 .tile:nth-child(odd):hover,
 .tile:nth-child(odd):focus-within {
   transform: translateY(-4px) rotate(-3deg);
-  box-shadow: 0 12px 24px -8px rgba(114, 70, 216, 0.45);
 }
 
 .tile:focus-visible {
@@ -105,6 +101,5 @@
   .tile:nth-child(odd):hover,
   .tile:nth-child(odd):focus-within {
     transform: none;
-    box-shadow: 0 8px 20px -12px rgba(20, 20, 43, 0.25);
   }
 }
