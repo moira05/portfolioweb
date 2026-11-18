@@ -51,8 +51,7 @@ export const EXPERIENCE: ExperienceItem[] = [
       { value: "Amplitude",  label: "Métricas y CSAT" },
     ],
     caseLinks: [
-      { label: "Contracargos →",    href: "/proyectos/contracargos" },
-      { label: "Transferencias →",  href: "/proyectos/transferencias" },
+      { label: "Contracargos →", href: "/proyectos/contracargos" },
     ],
   },
   {
@@ -67,6 +66,9 @@ export const EXPERIENCE: ExperienceItem[] = [
       { value: "4",           label: "Designers a cargo" },
       { value: "Design Ops",  label: "Documentación y toolkit" },
       { value: "OKRs",        label: "Del equipo al individuo" },
+    ],
+    caseLinks: [
+      { label: "Transferencias →", href: "/proyectos/transferencias" },
     ],
   },
   {
