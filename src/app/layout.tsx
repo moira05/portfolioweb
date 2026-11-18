@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Manrope, Urbanist, Vollkorn, Space_Mono } from "next/font/google";
+import { Manrope, Urbanist, Vollkorn, Space_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import ClarityInit from "@/components/ClarityInit";
@@ -26,6 +26,13 @@ const vollkorn = Vollkorn({
   style: ["normal", "italic"],
 });
 
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
+  subsets: ["latin"],
+  weight: ["400", "600"],
+  style: ["normal", "italic"],
+});
+
 export const metadata: Metadata = {
   title: "Portfolio — Moira",
   description: "Portfolio personal de Moira, Product Designer",
@@ -40,7 +47,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body
-        className={`${manrope.variable} ${urbanist.variable} ${vollkorn.variable} ${spaceMono.variable} antialiased`}
+        className={`${manrope.variable} ${urbanist.variable} ${vollkorn.variable} ${spaceMono.variable} ${newsreader.variable} antialiased`}
       >
         <ClarityInit />
         <Navbar />

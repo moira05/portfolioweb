@@ -1,0 +1,28 @@
+.cardInner {
+  display: grid;
+  grid-template-columns: minmax(180px, 30%) 1fr;
+  gap: 24px 56px;
+  padding: 48px 56px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 28px;
+}
+
+@media (max-width: 759px) {
+  .cardInner {
+    display: block;
+    padding: 28px 20px;
+  }
+  .cardLeft {
+    margin-bottom: 20px;
+  }
+  .stats {
+    gap: 12px;
+  }
+}

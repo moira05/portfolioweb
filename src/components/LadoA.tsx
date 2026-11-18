@@ -79,8 +79,18 @@ export default function LadoA() {
   const [flipped, setFlipped] = useState(false);
 
   return (
-    <section id="lado-a" className="bg-white pb-16 pt-[104px] md:pt-[125px]">
+    <section id="lado-a" className="bg-white pb-16 pt-[125px] md:pt-[150px]">
       <Container>
+        {/* Intro */}
+        <div className="mb-12 max-w-[640px]">
+          <h2 className="font-vollkorn text-[1.75rem] font-normal leading-[1.1] text-[#14142b] mb-5 md:text-[2.25rem]">
+            Hola, soy <span style={{ color: "var(--accent)" }}>Moi</span>
+          </h2>
+          <p className="font-manrope text-[1rem] leading-relaxed text-[#5f5c85] md:text-[1.15rem]">
+            Hace <strong className="font-bold text-[#14142b]">11 años</strong> que trabajo en empresas de tecnología, en distintos roles: maquetadora web, UI designer y hoy Senior Product Designer, con 7 años en producto digital (fintech y ERP). Diseño con IA y decido yo dónde: prototipo en HTML, armo mis propias skills y uso la IA para ganar velocidad sin perder criterio.
+          </p>
+        </div>
+
         {/* Header */}
         <div className="flex items-start justify-between">
           <SectionTitle>{flipped ? "Mi lado B" : "Mi lado A"}</SectionTitle>

@@ -5,6 +5,7 @@
   --foreground: #171717;
   --accent:  #7246D8;
   --bg:      #eeedf5;
+  --bg-soft: #e3e2ee;
   --ink:     #131313;
   --muted:   #5f5c85;
   --line:    #DBDDE0;
@@ -17,6 +18,7 @@
   --font-urbanist: var(--font-urbanist);
   --font-vollkorn: var(--font-vollkorn);
   --font-space-mono: var(--font-space-mono);
+  --font-newsreader: var(--font-newsreader);
 }
 
 @keyframes wave {
@@ -179,6 +181,7 @@ html {
   outline-offset: 3px;
   border-radius: 999px;
 }
+
 
 /* ── Responsive nav visibility ─────────────────────────────────────────────── */
 .nav-desktop { display: none; }
