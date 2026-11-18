@@ -83,6 +83,8 @@ export default function LadoA() {
   return (
     <section id="lado-a" className="bg-white pb-16 pt-[125px] md:pt-[150px]">
       <Container>
+        <SectionTitle>Sobre mí</SectionTitle>
+
         {/* Intro + Toolkit */}
         <div className={ladoAStyles.introGrid}>
           {/* Left: intro text */}
