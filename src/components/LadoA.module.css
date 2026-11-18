@@ -1,0 +1,16 @@
+.introGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 64px;
+  align-items: start;
+  margin-bottom: 48px;
+}
+
+@media (max-width: 899px) {
+  .introGrid {
+    display: block;
+  }
+  .introGrid > *:last-child {
+    margin-top: 40px;
+  }
+}
