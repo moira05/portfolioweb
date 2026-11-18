@@ -100,7 +100,7 @@ export default function ToolkitBlock() {
 
   return (
     <div>
-      <p className={styles.label}>Toolkit</p>
+      <p className={styles.label}>Herramientas</p>
       <div className={styles.grid}>
         {TOOLKIT.map((tool, i) => (
           <div
