@@ -235,7 +235,7 @@ export default function Experiencia() {
                       {exp.stats.map((stat, si) => (
                         <div
                           key={si}
-                          style={{ borderLeft: "1px solid var(--line)", paddingLeft: 16 }}
+                          style={{ borderLeft: "2px solid #b0aec8", paddingLeft: 16 }}
                         >
                           <p
                             className="font-manrope"
