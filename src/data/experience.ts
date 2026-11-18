@@ -35,7 +35,7 @@ export const EXPERIENCE: ExperienceItem[] = [
       { value: "Onboarding",  label: "Alta de empresa" },
       { value: "IA",          label: "Prototipos en HTML y skills" },
     ],
-    caseLinks: [{ label: "Ver caso →", href: "/proyectos/onboarding" }],
+    caseLinks: [{ label: "Ver caso · Onboarding →", href: "/proyectos/onboarding" }],
   },
   {
     id: "tiendanube",
@@ -51,7 +51,7 @@ export const EXPERIENCE: ExperienceItem[] = [
       { value: "Amplitude",  label: "Métricas y CSAT" },
     ],
     caseLinks: [
-      { label: "Contracargos →", href: "/proyectos/contracargos" },
+      { label: "Ver caso · Contracargos →", href: "/proyectos/contracargos" },
     ],
   },
   {
@@ -68,7 +68,7 @@ export const EXPERIENCE: ExperienceItem[] = [
       { value: "OKRs",        label: "Del equipo al individuo" },
     ],
     caseLinks: [
-      { label: "Transferencias →", href: "/proyectos/transferencias" },
+      { label: "Ver caso · Transferencias →", href: "/proyectos/transferencias" },
     ],
   },
   {
