@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import SectionTitle from "@/components/SectionTitle";
 import Container from "@/components/Container";
 
-type ReplyItem = string | [string, string]; // string or [label, color]
+type ReplyItem = string | [string, string];
 
 interface Step {
   tab: string;
@@ -81,6 +81,7 @@ const STEPS: Step[] = [
 ];
 
 const N = STEPS.length;
+const AUTO_MS = 6000;
 
 export default function ComoUsoAI() {
   const [cur, setCur] = useState(0);
@@ -89,34 +90,17 @@ export default function ComoUsoAI() {
   const [showDecide, setShowDecide] = useState(false);
   const [infoVisible, setInfoVisible] = useState(true);
 
-  const trackRef = useRef<HTMLDivElement>(null);
-  const typerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const typerRef  = useRef<ReturnType<typeof setInterval> | null>(null);
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const autoRef   = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isFirstRef = useRef(true);
 
-  // ── Scroll tracking ──────────────────────────────────────────────────────────
+  // ── Auto-advance ─────────────────────────────────────────────────────────────
   useEffect(() => {
-    let raf = 0;
-    const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        if (!trackRef.current) return;
-        const r = trackRef.current.getBoundingClientRect();
-        const trackTop = window.scrollY + r.top;
-        const trackLen = trackRef.current.offsetHeight - window.innerHeight;
-        const p = Math.min(0.9999, Math.max(0, (window.scrollY - trackTop) / trackLen));
-        const idx = Math.floor(p * N);
-        setCur(prev => (prev !== idx ? idx : prev));
-      });
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      cancelAnimationFrame(raf);
-    };
-  }, []);
+    if (autoRef.current) clearTimeout(autoRef.current);
+    autoRef.current = setTimeout(() => setCur(prev => (prev + 1) % N), AUTO_MS);
+    return () => { if (autoRef.current) clearTimeout(autoRef.current); };
+  }, [cur]);
 
   // ── Typewriter on step change ────────────────────────────────────────────────
   useEffect(() => {
@@ -170,15 +154,8 @@ export default function ComoUsoAI() {
   }, [cur]);
 
   const goTo = (i: number) => {
-    if (!trackRef.current) return;
-    const r = trackRef.current.getBoundingClientRect();
-    const trackTop = window.scrollY + r.top;
-    const trackLen = trackRef.current.offsetHeight - window.innerHeight;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    window.scrollTo({
-      top: trackTop + trackLen * ((i + 0.5) / N),
-      behavior: reduce ? "auto" : "smooth",
-    });
+    if (autoRef.current) clearTimeout(autoRef.current);
+    setCur(i);
   };
 
   const step = STEPS[cur];
@@ -200,245 +177,218 @@ export default function ComoUsoAI() {
         </p>
       </Container>
 
-      {/* ── Scroll track ──────────────────────────────────────────────────────── */}
-      <div ref={trackRef} style={{ height: "420dvh" }}>
-        <div className="sticky top-0 flex items-center" style={{ height: "100dvh" }}>
-          <Container>
-            <div className="grid grid-cols-1 items-center gap-6 md:grid-cols-2 md:gap-16">
+      {/* ── Steps ─────────────────────────────────────────────────────────────── */}
+      <Container className="pb-20 pt-4">
+        <div className="grid grid-cols-1 items-center gap-6 md:grid-cols-2 md:gap-16">
 
-              {/* ── Left: nav + info ────────────────────────────────────────── */}
-              <div className="min-w-0">
-                {/* Numbered nav */}
-                <ol className="relative mb-9 list-none" aria-label="Etapas">
-                  {/* Vertical track line — desktop only */}
-                  <span
-                    className="pointer-events-none absolute hidden md:block"
-                    style={{ left: 15, top: 16, bottom: 16, width: 2, background: "#dcdae8" }}
-                    aria-hidden="true"
-                  />
-                  {/* Fill */}
-                  <span
-                    className="pointer-events-none absolute hidden md:block"
-                    style={{
-                      left: 15,
-                      top: 16,
-                      width: 2,
-                      background: "#6f5fd6",
-                      height: `calc(${fillPct} * (100% - 32px))`,
-                      transition: "height 0.4s ease",
-                    }}
-                    aria-hidden="true"
-                  />
-
-                  {/* On mobile: flex row; on desktop: grid with gap */}
-                  <div className="flex flex-wrap gap-1.5 md:grid md:gap-1">
-                    {STEPS.map((s, i) => (
-                      <li key={s.tab}>
-                        <button
-                          type="button"
-                          onClick={() => goTo(i)}
-                          aria-label={`${i + 1}. ${s.tab}`}
-                          aria-current={cur === i ? "step" : undefined}
-                          className="relative flex cursor-pointer items-center gap-4 border-none bg-transparent py-1 text-left font-manrope text-[17px] font-semibold transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6f5fd6] focus-visible:rounded-lg"
-                          style={{ color: cur === i ? "#14142b" : "#5f5c85" }}
-                        >
-                          <span
-                            className="grid h-8 w-8 shrink-0 place-items-center rounded-full border-2 text-[13px] font-bold transition-all duration-200"
-                            style={
-                              cur === i
-                                ? { background: "#6f5fd6", borderColor: "#6f5fd6", color: "#fff", transform: "scale(1.1)" }
-                                : i < cur
-                                ? { background: "#eeedf5", borderColor: "#6f5fd6", color: "#6f5fd6" }
-                                : { background: "#eeedf5", borderColor: "#dcdae8", color: "#5f5c85" }
-                            }
-                          >
-                            {i + 1}
-                          </span>
-                          <span className="hidden md:inline">{s.tab}</span>
-                        </button>
-                      </li>
-                    ))}
-                  </div>
-                </ol>
-
-                {/* Info: title + desc */}
-                <div
-                  aria-live="polite"
-                  style={{
-                    opacity: infoVisible ? 1 : 0,
-                    transform: infoVisible ? "none" : "translateY(8px)",
-                    transition: "opacity 0.3s ease, transform 0.3s ease",
-                  }}
-                >
-                  <h3
-                    className="font-manrope font-extrabold leading-[1.1] tracking-[-0.03em] text-[#14142b]"
-                    style={{ fontSize: "clamp(28px, 3.2vw, 42px)" }}
-                  >
-                    {step.title}
-                  </h3>
-                  <p className="mt-3 max-w-[46ch] font-manrope text-[17px] leading-relaxed text-[#5f5c85]">
-                    {step.desc}
-                  </p>
-                </div>
-              </div>
-
-              {/* ── Right: Terminal ─────────────────────────────────────────── */}
-              <div
-                className="min-w-0 overflow-hidden rounded-[20px] font-space-mono"
+          {/* ── Left: nav + info ──────────────────────────────────────────────── */}
+          <div className="min-w-0">
+            {/* Numbered nav */}
+            <ol className="relative mb-9 list-none" aria-label="Etapas">
+              {/* Vertical track line — desktop only */}
+              <span
+                className="pointer-events-none absolute hidden md:block"
+                style={{ left: 15, top: 16, bottom: 16, width: 2, background: "#dcdae8" }}
+                aria-hidden="true"
+              />
+              {/* Fill */}
+              <span
+                className="pointer-events-none absolute hidden md:block"
                 style={{
-                  background: "#191a2e",
-                  color: "#e8e6ff",
-                  boxShadow: "0 30px 70px -30px rgba(20,20,43,0.55)",
+                  left: 15,
+                  top: 16,
+                  width: 2,
+                  background: "#6f5fd6",
+                  height: `calc(${fillPct} * (100% - 32px))`,
+                  transition: "height 0.4s ease",
                 }}
-              >
-                {/* Bar */}
-                <div
-                  className="flex items-center gap-2 border-b px-5 py-3.5 font-manrope text-[13px]"
-                  style={{ borderColor: "rgba(255,255,255,0.08)", color: "#8f8cc2" }}
-                >
-                  {[0, 1, 2].map(i => (
-                    <span
-                      key={i}
-                      className="h-[11px] w-[11px] rounded-full"
-                      style={{ background: "rgba(255,255,255,0.14)" }}
-                    />
-                  ))}
-                  <span className="ml-2.5">{step.no ? "sin AI" : "claude"}</span>
-                </div>
+                aria-hidden="true"
+              />
 
-                {/* Body */}
-                <div className="min-h-[220px] px-6 py-6 text-[15px] leading-[1.65] md:min-h-[250px] md:text-[15.5px]">
-                  {/* Prompt line */}
-                  <div>
-                    <span
-                      className="mr-2.5 font-bold"
-                      style={{ color: step.no ? "#7be0a3" : "#a99cf0" }}
+              <div className="flex flex-wrap gap-1.5 md:grid md:gap-1">
+                {STEPS.map((s, i) => (
+                  <li key={s.tab}>
+                    <button
+                      type="button"
+                      onClick={() => goTo(i)}
+                      aria-label={`${i + 1}. ${s.tab}`}
+                      aria-current={cur === i ? "step" : undefined}
+                      className="relative flex cursor-pointer items-center gap-4 border-none bg-transparent py-1 text-left font-manrope text-[17px] font-semibold transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6f5fd6] focus-visible:rounded-lg"
+                      style={{ color: cur === i ? "#14142b" : "#5f5c85" }}
                     >
-                      {step.no ? "#" : ">"}
-                    </span>
-                    <span style={{ color: "#fff" }}>{typedText}</span>
-                    {isTyping && (
                       <span
-                        className="cursor-blink ml-0.5 inline-block"
-                        style={{
-                          width: 9,
-                          height: "1.1em",
-                          background: "#a99cf0",
-                          verticalAlign: "text-bottom",
-                        }}
-                      />
-                    )}
-                  </div>
+                        className="grid h-8 w-8 shrink-0 place-items-center rounded-full border-2 text-[13px] font-bold transition-all duration-200"
+                        style={
+                          cur === i
+                            ? { background: "#6f5fd6", borderColor: "#6f5fd6", color: "#fff", transform: "scale(1.1)" }
+                            : i < cur
+                            ? { background: "#eeedf5", borderColor: "#6f5fd6", color: "#6f5fd6" }
+                            : { background: "#eeedf5", borderColor: "#dcdae8", color: "#5f5c85" }
+                        }
+                      >
+                        {i + 1}
+                      </span>
+                      <span className="hidden md:inline">{s.tab}</span>
+                    </button>
+                  </li>
+                ))}
+              </div>
+            </ol>
 
-                  {/* Reply */}
-                  {showReply && (
-                    <div
-                      className="mt-3.5"
-                      style={{
-                        opacity: 1,
-                        transform: "none",
-                        transition: "opacity 0.35s ease, transform 0.35s ease",
-                      }}
-                    >
-                      {step.aiText ? (
-                        <span style={{ color: "#b9b6e6" }}>{step.aiText}</span>
-                      ) : (
-                        <span>
-                          {step.reply.map((r, i) =>
-                            Array.isArray(r) ? (
-                              <span
-                                key={i}
-                                className="mr-2 mt-1 inline-flex items-center gap-2 rounded-full border px-3 py-0.5 text-[13.5px]"
-                                style={{ borderColor: "rgba(255,255,255,0.16)", color: "#e8e6ff" }}
-                              >
-                                <span
-                                  className="h-[9px] w-[9px] shrink-0 rounded-full"
-                                  style={{ background: r[1] }}
-                                />
-                                {r[0]}
-                              </span>
-                            ) : (
-                              <span
-                                key={i}
-                                className="mr-2 mt-1 inline-flex items-center gap-2 rounded-full border px-3 py-0.5 text-[13.5px]"
-                                style={{ borderColor: "rgba(255,255,255,0.16)", color: "#e8e6ff" }}
-                              >
-                                <span style={{ color: "#7be0a3" }}>✓</span>
-                                {r}
-                              </span>
-                            )
-                          )}
-                        </span>
-                      )}
-                    </div>
-                  )}
+            {/* Info: title + desc */}
+            <div
+              aria-live="polite"
+              style={{
+                opacity: infoVisible ? 1 : 0,
+                transform: infoVisible ? "none" : "translateY(8px)",
+                transition: "opacity 0.3s ease, transform 0.3s ease",
+              }}
+            >
+              <h3
+                className="font-manrope font-extrabold leading-[1.1] tracking-[-0.03em] text-[#14142b]"
+                style={{ fontSize: "clamp(28px, 3.2vw, 42px)" }}
+              >
+                {step.title}
+              </h3>
+              <p className="mt-3 max-w-[46ch] font-manrope text-[17px] leading-relaxed text-[#5f5c85]">
+                {step.desc}
+              </p>
+            </div>
+          </div>
 
-                  {/* yo decido */}
-                  {showDecide && (
-                    <div
-                      className="mt-3.5"
-                      style={{ transition: "opacity 0.35s ease, transform 0.35s ease" }}
-                    >
-                      <span className="mr-2.5 font-bold" style={{ color: "#7be0a3" }}>✓</span>
-                      <span className="font-bold" style={{ color: "#7be0a3" }}>yo decido:</span>{" "}
-                      <span style={{ color: "#fff" }}>{step.me[0]}</span>
-                    </div>
-                  )}
-                </div>
+          {/* ── Right: Terminal ───────────────────────────────────────────────── */}
+          <div
+            className="min-w-0 overflow-hidden rounded-[20px] font-space-mono"
+            style={{
+              background: "#191a2e",
+              color: "#e8e6ff",
+              boxShadow: "0 30px 70px -30px rgba(20,20,43,0.55)",
+            }}
+          >
+            {/* Bar */}
+            <div
+              className="flex items-center gap-2 border-b px-5 py-3.5 font-manrope text-[13px]"
+              style={{ borderColor: "rgba(255,255,255,0.08)", color: "#8f8cc2" }}
+            >
+              {[0, 1, 2].map(i => (
+                <span
+                  key={i}
+                  className="h-[11px] w-[11px] rounded-full"
+                  style={{ background: "rgba(255,255,255,0.14)" }}
+                />
+              ))}
+              <span className="ml-2.5">{step.no ? "sin AI" : "claude"}</span>
+            </div>
 
-                {/* Split footer: La AI / Yo decido */}
-                <div
-                  className="grid grid-cols-2 font-manrope"
-                  style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
+            {/* Body */}
+            <div className="min-h-[220px] px-6 py-6 text-[15px] leading-[1.65] md:min-h-[250px] md:text-[15.5px]">
+              <div>
+                <span
+                  className="mr-2.5 font-bold"
+                  style={{ color: step.no ? "#7be0a3" : "#a99cf0" }}
                 >
-                  <div className="px-6 py-4 pb-5">
-                    <h4
-                      className="mb-2 text-[12px] font-bold uppercase tracking-[0.1em]"
-                      style={{ color: "#8f8cc2" }}
-                    >
-                      La AI
-                    </h4>
-                    <ul className="grid gap-1.5 text-[14.5px] leading-[1.4]" style={{ color: "#d6d3f5", listStyle: "none" }}>
-                      {step.ai.map((item, i) => (
-                        <li key={i}>
-                          <span className="mr-2" style={{ color: "#6e6aa3" }}>–</span>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div
-                    className="px-6 py-4 pb-5"
+                  {step.no ? "#" : ">"}
+                </span>
+                <span style={{ color: "#fff" }}>{typedText}</span>
+                {isTyping && (
+                  <span
+                    className="cursor-blink ml-0.5 inline-block"
                     style={{
-                      borderLeft: "1px solid rgba(255,255,255,0.08)",
-                      background: "rgba(169,156,240,0.08)",
+                      width: 9,
+                      height: "1.1em",
+                      background: "#a99cf0",
+                      verticalAlign: "text-bottom",
                     }}
-                  >
-                    <h4
-                      className="mb-2 text-[12px] font-bold uppercase tracking-[0.1em]"
-                      style={{ color: "#a99cf0" }}
-                    >
-                      Yo decido
-                    </h4>
-                    <ul className="grid gap-1.5 text-[14.5px] leading-[1.4]" style={{ color: "#d6d3f5", listStyle: "none" }}>
-                      {step.me.map((item, i) => (
-                        <li key={i}>
-                          <span className="mr-2" style={{ color: "#a99cf0" }}>→</span>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+                  />
+                )}
               </div>
 
-            </div>
-          </Container>
-        </div>
-      </div>
+              {showReply && (
+                <div className="mt-3.5">
+                  {step.aiText ? (
+                    <span style={{ color: "#b9b6e6" }}>{step.aiText}</span>
+                  ) : (
+                    <span>
+                      {step.reply.map((r, i) =>
+                        Array.isArray(r) ? (
+                          <span
+                            key={i}
+                            className="mr-2 mt-1 inline-flex items-center gap-2 rounded-full border px-3 py-0.5 text-[13.5px]"
+                            style={{ borderColor: "rgba(255,255,255,0.16)", color: "#e8e6ff" }}
+                          >
+                            <span className="h-[9px] w-[9px] shrink-0 rounded-full" style={{ background: r[1] }} />
+                            {r[0]}
+                          </span>
+                        ) : (
+                          <span
+                            key={i}
+                            className="mr-2 mt-1 inline-flex items-center gap-2 rounded-full border px-3 py-0.5 text-[13.5px]"
+                            style={{ borderColor: "rgba(255,255,255,0.16)", color: "#e8e6ff" }}
+                          >
+                            <span style={{ color: "#7be0a3" }}>✓</span>
+                            {r}
+                          </span>
+                        )
+                      )}
+                    </span>
+                  )}
+                </div>
+              )}
 
-      {/* Spacer after track */}
-      <div style={{ height: "21vh" }} />
+              {showDecide && (
+                <div className="mt-3.5">
+                  <span className="mr-2.5 font-bold" style={{ color: "#7be0a3" }}>✓</span>
+                  <span className="font-bold" style={{ color: "#7be0a3" }}>yo decido:</span>{" "}
+                  <span style={{ color: "#fff" }}>{step.me[0]}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div
+              className="grid grid-cols-2 font-manrope"
+              style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
+            >
+              <div className="px-6 py-4 pb-5">
+                <h4
+                  className="mb-2 text-[12px] font-bold uppercase tracking-[0.1em]"
+                  style={{ color: "#8f8cc2" }}
+                >
+                  La AI
+                </h4>
+                <ul className="grid gap-1.5 text-[14.5px] leading-[1.4]" style={{ color: "#d6d3f5", listStyle: "none" }}>
+                  {step.ai.map((item, i) => (
+                    <li key={i}>
+                      <span className="mr-2" style={{ color: "#6e6aa3" }}>–</span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div
+                className="px-6 py-4 pb-5"
+                style={{ borderLeft: "1px solid rgba(255,255,255,0.08)", background: "rgba(169,156,240,0.08)" }}
+              >
+                <h4
+                  className="mb-2 text-[12px] font-bold uppercase tracking-[0.1em]"
+                  style={{ color: "#a99cf0" }}
+                >
+                  Yo decido
+                </h4>
+                <ul className="grid gap-1.5 text-[14.5px] leading-[1.4]" style={{ color: "#d6d3f5", listStyle: "none" }}>
+                  {step.me.map((item, i) => (
+                    <li key={i}>
+                      <span className="mr-2" style={{ color: "#a99cf0" }}>→</span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </Container>
     </div>
   );
 }
