@@ -21,23 +21,6 @@ export interface Project {
 export const PROJECTS: Project[] = [
   // ── Fila 1: grandes ──────────────────────────────────────────────────────────
   {
-    slug: "contracargos",
-    category: "Tiendanube",
-    title: "Contracargos",
-    descriptor: "defensa en un paso",
-    cover: {
-      type: "cycle",
-      frame: "phone",
-      images: [
-        { src: "/01-listado.png", alt: "Listado de contracargos" },
-        { src: "/02-venta.png", alt: "Detalle de venta" },
-        { src: "/03-comprobante.png", alt: "Carga de comprobante" },
-      ],
-    },
-    result: "De un proceso manual con formulario, captura y PDF a cargar el comprobante dentro de la plataforma.",
-    status: "published",
-  },
-  {
     slug: "onboarding",
     category: "ITTI - BIMS",
     title: "Onboarding",
@@ -53,6 +36,23 @@ export const PROJECTS: Project[] = [
       ],
     },
     result: "De 6 pasos a 3 para darse de alta solo, sin reuniones de implementación.",
+    status: "published",
+  },
+  {
+    slug: "contracargos",
+    category: "Tiendanube",
+    title: "Contracargos",
+    descriptor: "defensa en un paso",
+    cover: {
+      type: "cycle",
+      frame: "phone",
+      images: [
+        { src: "/01-listado.png", alt: "Listado de contracargos" },
+        { src: "/02-venta.png", alt: "Detalle de venta" },
+        { src: "/03-comprobante.png", alt: "Carga de comprobante" },
+      ],
+    },
+    result: "De un proceso manual con formulario, captura y PDF a cargar el comprobante dentro de la plataforma.",
     status: "published",
   },
   // ── Fila 2: medianas ─────────────────────────────────────────────────────────
